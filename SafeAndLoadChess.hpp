@@ -17,6 +17,19 @@ public:
 			}
 		}
 		streamOut.close();
+		std::remove("Chess_Quick_Safe.txt");
+		return 0;
+	}
+public:
+	int quicksafe(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
+		std::ofstream streamOut("Chess_Quick_Safe.txt");
+		streamOut << std::to_string(currentP) << std::endl;
+		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
+			for (std::shared_ptr<Figure> x : *vec) {
+				streamOut << x->get_Name() << "\n" << std::to_string(x->get_player()) << std::endl;
+			}
+		}
+		streamOut.close();
 		return 0;
 	}
 public:

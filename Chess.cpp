@@ -364,6 +364,8 @@ int main()
 					std::cout << "Both kings are attacked!\n";
 				}
 			}
+			
+			safeAndLoad.quicksafe(chessBoard,currentPlayer);
 		}
 		else if (choice == "2") {
 			printer.print(chessBoard);
@@ -381,6 +383,7 @@ int main()
 			chessBoard.clear();
 			initBoard(chessBoard);
 			currentPlayer = 1;
+			safeAndLoad.quicksafe(chessBoard,currentPlayer);
 		}
 		else if (choice == "E") { play = false; }
 		else { std::cout << "Wrong input, try again.\n"; }
