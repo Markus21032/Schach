@@ -1,12 +1,13 @@
 ﻿#include <vector>
 #include <iostream>
+#include <memory>
 
 #ifndef _PRINTCHESS_
 #define _PRINTCHESS_
 
 class printChess {
 public:
-	void print(std::vector<std::vector<Figure*>*>& c) {
+	void print(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& c) {
 		std::cout << "===============================================\n";
 		std::cout << "||-|  A |  B |  C |  D |  E |  F |  G |  H |-||\n";
 		std::cout << "||=|=======================================|=||\n";

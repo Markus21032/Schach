@@ -1,52 +1,53 @@
 #include <iostream>
 #include <vector>
+#include <memory>
 #include "ChessFigures.hpp"
 #include "PrintChess.hpp"
 #include "SafeAndLoadChess.hpp"
-void del(std::vector<std::vector<Figure*>*>& chessBoard) {
+void del(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			(*(*chessBoard[i])[j]).delete_figure_values();
-			delete((*chessBoard[i])[j]);
+			//delete((*chessBoard[i])[j]);
 		}
-		delete(chessBoard[i]);
+		//delete(chessBoard[i]);
 	}
 }
-void initBoard(std::vector<std::vector<Figure*>*>& chessBoard) {
+void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	for (int i = 0; i < 8; i++) {
-		std::vector<Figure*>* fig = new std::vector<Figure*>;
+		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
 		if (i == 0 || i == 7) {
 			int player = 1;
 			if (i == 7) { player = 2; }
-			TowerFigure* t1 = new TowerFigure;
+			std::shared_ptr<TowerFigure> t1 = std::make_shared< TowerFigure>();
 			t1->init_figure();
 			t1->assign_to_player(player);
 			fig->push_back(t1);
-			JumperFigure* j1 = new JumperFigure;
+			std::shared_ptr<JumperFigure> j1 = std::make_shared< JumperFigure>();
 			j1->init_figure();
 			j1->assign_to_player(player);
 			fig->push_back(j1);
-			RunnerFigure* r1 = new RunnerFigure;
+			std::shared_ptr<RunnerFigure> r1 = std::make_shared< RunnerFigure>();
 			r1->init_figure();
 			r1->assign_to_player(player);
 			fig->push_back(r1);
-			KingFigure* k = new KingFigure;
+			std::shared_ptr<KingFigure> k = std::make_shared< KingFigure>();
 			k->init_figure();
 			k->assign_to_player(player);
 			fig->push_back(k);
-			QueenFigure* q = new QueenFigure;
+			std::shared_ptr<QueenFigure> q = std::make_shared< QueenFigure>();
 			q->init_figure();
 			q->assign_to_player(player);
 			fig->push_back(q);
-			RunnerFigure* r2 = new RunnerFigure;
+			std::shared_ptr<RunnerFigure> r2 = std::make_shared< RunnerFigure>();
 			r2->init_figure();
 			r2->assign_to_player(player);
 			fig->push_back(r2);
-			JumperFigure* j2 = new JumperFigure;
+			std::shared_ptr<JumperFigure> j2 = std::make_shared< JumperFigure>();
 			j2->init_figure();
 			j2->assign_to_player(player);
 			fig->push_back(j2);
-			TowerFigure* t2 = new TowerFigure;
+			std::shared_ptr<TowerFigure> t2 = std::make_shared< TowerFigure>();
 			t2->init_figure();
 			t2->assign_to_player(player);
 			fig->push_back(t2);
@@ -55,7 +56,7 @@ void initBoard(std::vector<std::vector<Figure*>*>& chessBoard) {
 			int player = 1;
 			if (i == 6) { player = 2; }
 			for (int j = 0; j < 8; j++) {
-				PawnFigure* f = new PawnFigure;
+				std::shared_ptr<PawnFigure> f = std::make_shared< PawnFigure>();
 				f->init_figure();
 				f->assign_to_player(player);
 				fig->push_back(f);
@@ -63,7 +64,7 @@ void initBoard(std::vector<std::vector<Figure*>*>& chessBoard) {
 		}
 		else {
 			for (int j = 0; j < 8; j++) {
-				NoneFigure* f = new NoneFigure;
+				std::shared_ptr<NoneFigure> f = std::make_shared< NoneFigure>();
 				f->init_figure();
 				fig->push_back(f);
 			}
@@ -72,7 +73,7 @@ void initBoard(std::vector<std::vector<Figure*>*>& chessBoard) {
 	}
 }
 
-int isKingAttacked(std::vector<std::vector<Figure*>*>& chessBoard) {
+int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	bool isAttacked = false;
 	int attackePlayer = 0;
 	for (int i = 0; i < 8; i++) {
@@ -262,7 +263,7 @@ int isKingAttacked(std::vector<std::vector<Figure*>*>& chessBoard) {
 
 int main()
 {
-	std::vector<std::vector<Figure*>*> chessBoard;
+	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard;
 	initBoard(chessBoard);
 	printChess printer;
 	safeAndLoadChess safeAndLoad;
@@ -344,7 +345,8 @@ int main()
 				}
 				else {
 					*(*chessBoard[lineTarget])[columnTarget] = *(*chessBoard[lineSelect])[columnSelect];
-					NoneFigure* f = new NoneFigure;
+					
+					std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
 					f->init_figure();
 					(*chessBoard[lineSelect])[columnSelect] = f;
 					if (currentPlayer == 1) { currentPlayer = 2; }
