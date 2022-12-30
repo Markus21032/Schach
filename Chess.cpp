@@ -1,9 +1,22 @@
 #include <iostream>
 #include <vector>
+#include <csignal>
 #include <memory>
 #include "ChessFigures.hpp"
 #include "PrintChess.hpp"
 #include "SafeAndLoadChess.hpp"
+
+
+
+void signal_handler(int signal){
+	std::remove("Chess_Safe.txt");
+	std::rename("Chess_Quick_Safe.txt", "Chess_Safe.txt");
+}
+void exit_handler(){
+	std::remove("Chess_Safe.txt");
+	std::rename("Chess_Quick_Safe.txt", "Chess_Safe.txt");
+}
+
 void del(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
@@ -263,6 +276,9 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 
 int main()
 {
+	//std::signal(SIGINT,signal_handler);
+	std::atexit(exit_handler);
+	
 	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard;
 	initBoard(chessBoard);
 	printChess printer;
@@ -385,7 +401,10 @@ int main()
 			currentPlayer = 1;
 			safeAndLoad.quicksafe(chessBoard,currentPlayer);
 		}
-		else if (choice == "E") { play = false; }
+		else if (choice == "E") { 
+			safeAndLoad.safe(chessBoard, currentPlayer);
+			play = false; 
+		}
 		else { std::cout << "Wrong input, try again.\n"; }
 		std::cout << "\n";
 	}
