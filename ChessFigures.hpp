@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 
 #ifndef _FIGURE_
 #define _FIGURE_
