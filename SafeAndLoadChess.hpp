@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include "ChessFigures.hpp"
 
 #ifndef _SAFEANDLOADCHESS_
 #define _SAFEANDLOADCHESS_
@@ -35,7 +36,11 @@ public:
 public:
 	int load(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 		std::ifstream streamIn;
-		streamIn.open("Chess_Safe.txt");
+
+		try{
+			streamIn.open("Chess_Safe.txt");
+			
+		
 		std::string input;
 		std::string currentP;
 		std::getline(streamIn, currentP);
@@ -104,6 +109,12 @@ public:
 		}
 		streamIn.close();
 		return std::stoi(currentP);
+		}
+		catch(...){
+			std::cout << "File not found or bad file" << std::endl;
+			// 3 for Error
+			return 3;
+		}
 	}
 };
 

@@ -7,12 +7,8 @@
 #include "SafeAndLoadChess.hpp"
 
 
-
-void signal_handler(int signal){
-	std::remove("Chess_Safe.txt");
-	std::rename("Chess_Quick_Safe.txt", "Chess_Safe.txt");
-}
 void exit_handler(){
+	
 	std::remove("Chess_Safe.txt");
 	std::rename("Chess_Quick_Safe.txt", "Chess_Safe.txt");
 }
@@ -26,6 +22,7 @@ void del(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& che
 		//delete(chessBoard[i]);
 	}
 }
+
 void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	for (int i = 0; i < 8; i++) {
 		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
@@ -264,9 +261,7 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 					}
 				}
 				
-
-
-
+				
 				if (isAttacked) { attackePlayer = attackePlayer + playerOfKing; }
 			}
 		}
@@ -276,7 +271,6 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 
 int main()
 {
-	//std::signal(SIGINT,signal_handler);
 	std::atexit(exit_handler);
 	
 	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard;
@@ -393,6 +387,12 @@ int main()
 			del(chessBoard);
 			chessBoard.clear();
 			currentPlayer = safeAndLoad.load(chessBoard);
+			if(currentPlayer == 3){
+				chessBoard.clear();
+				initBoard(chessBoard);
+				currentPlayer = 1;
+			}
+			safeAndLoad.quicksafe(chessBoard,currentPlayer);
 		}
 		else if (choice == "R") {
 			del(chessBoard);
@@ -401,10 +401,7 @@ int main()
 			currentPlayer = 1;
 			safeAndLoad.quicksafe(chessBoard,currentPlayer);
 		}
-		else if (choice == "E") { 
-			safeAndLoad.safe(chessBoard, currentPlayer);
-			play = false; 
-		}
+		else if (choice == "E") { play = false; }
 		else { std::cout << "Wrong input, try again.\n"; }
 		std::cout << "\n";
 	}
