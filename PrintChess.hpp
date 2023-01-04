@@ -3,8 +3,8 @@
 #include <memory>
 
 #ifndef _PRINTCHESS_
-#define _PRINTCHESS_
-
+#define _PRINTCHESS_  
+ 
 class printChess {
 public:
 	void print(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& c) {

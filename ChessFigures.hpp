@@ -4,7 +4,7 @@
 
 #ifndef _FIGURE_
 #define _FIGURE_
-//Player 0: neutral
+//Player 0: neutral 
 //Player 1: top
 //Player 2: bottom
 

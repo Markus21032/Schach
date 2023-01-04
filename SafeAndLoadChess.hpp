@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <memory>
+#include <filesystem>
 #include "ChessFigures.hpp"
 
 #ifndef _SAFEANDLOADCHESS_
@@ -10,7 +11,7 @@
 class safeAndLoadChess {
 public:
 	int safe(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
-		std::ofstream streamOut("Chess_Safe.txt");
+		std::ofstream streamOut("StartedGames/Chess_Safe.txt");
 		streamOut << std::to_string(currentP) << std::endl;
 		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
 			for (std::shared_ptr<Figure> x : *vec) {
@@ -18,12 +19,12 @@ public:
 			}
 		}
 		streamOut.close();
-		std::remove("Chess_Quick_Safe.txt");
+		std::remove("StartedGames/Chess_Quick_Safe.txt");
 		return 0;
 	}
 public:
 	int quicksafe(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
-		std::ofstream streamOut("Chess_Quick_Safe.txt");
+		std::ofstream streamOut("StartedGames/Chess_Quick_Safe.txt");
 		streamOut << std::to_string(currentP) << std::endl;
 		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
 			for (std::shared_ptr<Figure> x : *vec) {
@@ -34,18 +35,18 @@ public:
 		return 0;
 	}
 public:
-	int load(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
+	int load(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, std::string gameToLoad) {
 		std::ifstream streamIn;
 
 		try{
-			streamIn.open("Chess_Safe.txt");
-			
+			gameToLoad = "StartedGames/" + gameToLoad;
+			streamIn.open(gameToLoad);			
 		
-		std::string input;
-		std::string currentP;
-		std::getline(streamIn, currentP);
-		for (int i = 0; i < 8; i++) {
-		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
+			std::string input;
+			std::string currentP;
+			std::getline(streamIn, currentP);
+			for (int i = 0; i < 8; i++) {
+			std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
 
 			for (int j = 0; j < 8; j++) {
 				std::getline(streamIn, input);
