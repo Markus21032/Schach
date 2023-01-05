@@ -17,17 +17,17 @@ public: int get_player() { return (*playerNumber); };
 public: std::string get_2print() { return (*sign) + std::to_string((*playerNumber)); };
 public: void assign_to_player(int x) { *playerNumber = x; };
 protected: void init_figure() { };
-public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
+public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
 };
 
 class NoneFigure :public Figure {
 public: void assign_to_player() { *playerNumber = 0; };
 public: void init_figure() { *sign = '0'; assign_to_player(); };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
 };
 class PawnFigure :public Figure {
 public: void init_figure() { *sign = 'B'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) {
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
 	(*allowedToMove) = false;
 	if (player == 1) {
 		if (l1 == 1 && (l1 + 2) == l2) {
@@ -86,7 +86,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 };
 class KingFigure :public Figure {
 public: void init_figure() { *sign = 'K'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) {
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
 	(*allowedToMove) = false;
 	if ((l1 - 1) == l2) {
 		if (c1 == c2) {
@@ -139,7 +139,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 };
 class QueenFigure :public Figure {
 public: void init_figure() { *sign = 'Q'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) {
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
 	(*allowedToMove) = false;
 	bool skipsFigure = false;
 	if (l1 == l2) {
@@ -239,7 +239,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 };
 class TowerFigure :public Figure {
 public: void init_figure() { *sign = 'T'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) {
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
 	(*allowedToMove) = false;
 	bool skipsFigure = false;
 	if (l1 == l2) {
@@ -291,7 +291,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 };
 class RunnerFigure :public Figure {
 public: void init_figure() { *sign = 'L'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) {
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
 	(*allowedToMove) = false;
 	bool skipsFigure = false;
 	if (abs(l1 - l2) == abs(c1 - c2)) {
@@ -347,7 +347,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 };
 class JumperFigure :public Figure {
 public: void init_figure() { *sign = 'S'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) {
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
 	(*allowedToMove) = false;
 	if ((l1 + 2) == l2 || (l1 - 2) == l2) {
 		if ((c1 + 1) == c2 || (c1 - 1) == c2) {

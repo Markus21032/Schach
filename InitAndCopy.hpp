@@ -7,7 +7,7 @@
 #define _INITANDCOPY_ 
 
 //initialisizes the chess board
-void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
+void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >& chessBoard) {
 	for (int i = 0; i < 8; i++) {
 		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
 		if (i == 0 || i == 7) {
@@ -68,8 +68,8 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>
 };
 
 //copyes the chessboard
-std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> copyBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard){
-	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> copy;
+std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > copyBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >& chessBoard){
+	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > copy;
 	for (int i = 0; i < 8; i++) {
 		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
 		for (int j = 0; j < 8; j++) {

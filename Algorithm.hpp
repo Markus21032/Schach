@@ -13,7 +13,7 @@
 //1 -> player 1
 //2 -> player 2
 //3 -> both players (illegal move)
-int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
+int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >& chessBoard) {
 	bool isAttacked = false;
 	int attackedPlayer = 0;
 	for (int i = 0; i < 8; i++) {
@@ -200,17 +200,38 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 };
 
 
-bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int attackedKing) {
-	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> board = copyBoard(chessBoard);
+bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >& chessBoard, int attackedKing) {
+	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > board = copyBoard(chessBoard);
 	bool mate = false;
+	int kingposition[2];
 
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if((*chessBoard[i])[j]->get_Name() == 'K' && (*chessBoard[i])[j]->get_player() == attackedKing){
-				
+			if((*board[i])[j]->get_Name() == 'K' && (*board[i])[j]->get_player() == attackedKing){
+				kingposition[0] = i; //row
+				kingposition[1] = j; //column
 			}
 		}
 	}
+
+	//Fall 1: König kann sich selbstständig befreien
+	if((((*(*board[kingposition[0]])[kingposition[1]])).moveFigure(currentPlayer, kingposition[0], kingposition[1], kingposition[0]+1, kingposition[1], board))){ //Check if King is movable to postion
+
+		//Move Figure
+		*(*chessBoard[kingposition[0]])[kingposition[1]] = *(*chessBoard[kingposition[0]+1])[kingposition[1]];
+		std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+		f->init_figure();
+		(*chessBoard[kingposition[0]])[kingposition[1]] = f;
+
+		if(isKingAttacked(board) != attackedKing){ // Check if King is not attacked anymore after move
+			return false;
+		}
+	}
+	if((((*(*board[kingposition[0]])[kingposition[1]])).moveFigure(currentPlayer, kingposition[0], kingposition[1], kingposition[0]+1, kingposition[1], board)))
+
+
+	//Fall 2: Angreifende Figur kann geschlagen werden
+	//Fall 3: Figur kann sich zwischen Angreifer und König stellen
 
 
 	

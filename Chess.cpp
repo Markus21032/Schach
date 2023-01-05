@@ -4,15 +4,16 @@
 #include <string>
 #include <memory>
 #include <algorithm>
+
+std::string defaultSaveFileName = "Chess_Save";
+std::string saveFileName = "d";
+int currentPlayer = 1;
+
 #include "ChessFigures.hpp"
 #include "PrintChess.hpp"
 #include "SaveAndLoadChess.hpp"
 #include "Algorithm.hpp"
 
-
-std::string defaultSaveFileName = "Chess_Save";
-std::string saveFileName = "d";
-int currentPlayer = 1;
  
 void exit_handler(){
 	std::string quicksave = "StartedGames/Chess_Quick_Save";
@@ -39,7 +40,69 @@ void exit_handler(){
 	}
 }
 
+std::shared_ptr<std::vector<int>> checkAndGetSeletedPosition(std::string input)
+{
+	//check column
+	std::string columnChar = input.substr(0, 1);
+	int columnSelect;
+	if (columnChar == "A")
+	{
+		columnSelect = 0;
+	}
+	else if (columnChar == "B")
+	{
+		columnSelect = 1;
+	}
+	else if (columnChar == "C")
+	{
+		columnSelect = 2;
+	}
+	else if (columnChar == "D")
+	{
+		columnSelect = 3;
+	}
+	else if (columnChar == "E")
+	{
+		columnSelect = 4;
+	}
+	else if (columnChar == "F")
+	{
+		columnSelect = 5;
+	}
+	else if (columnChar == "G")
+	{
+		columnSelect = 6;
+	}
+	else if (columnChar == "H")
+	{
+		columnSelect = 7;
+	}
+	else
+	{
+		return nullptr;
+	}
 
+	//check row 
+	int lineSelect = 0;
+	try
+	{
+		lineSelect = 8 - std::stoi(input.substr(1, 1));
+	}
+	catch (std::invalid_argument)
+	{
+		return nullptr;
+	}
+
+	if (lineSelect < 0 || lineSelect > 7)
+	{
+		return nullptr;
+	}
+
+	auto selectedPosition = std::make_shared<std::vector<int>>();
+	(*selectedPosition).push_back(lineSelect);
+	(*selectedPosition).push_back(columnSelect);
+	return selectedPosition;
+}
 
 int main()
 {
@@ -66,37 +129,19 @@ int main()
 			while (true) {
 				//Select figure
 				std::string figureSelected;
-				std::string columnChar;
 				std::cout << "To choose the figure please enter the position of it:\n";
 				std::cin >> figureSelected;
-				columnChar = figureSelected.substr(0, 1);
-				int columnSelect;
-				if (columnChar == "A") { columnSelect = 0; }
-				else if (columnChar == "B") { columnSelect = 1; }
-				else if (columnChar == "C") { columnSelect = 2; }
-				else if (columnChar == "D") { columnSelect = 3; }
-				else if (columnChar == "E") { columnSelect = 4; }
-				else if (columnChar == "F") { columnSelect = 5; }
-				else if (columnChar == "G") { columnSelect = 6; }
-				else if (columnChar == "H") { columnSelect = 7; }
-				else {
-					std::cout << "Wrong column input!\n";
-					break;
-				}
-				//std::cout << "To choose the figure please enter line number:\n";
-				//std::cin >> lSelect;
+				auto input = checkAndGetSeletedPosition(figureSelected);
 				int lineSelect;
-				try{
-					lineSelect = 8 - std::stoi(figureSelected.substr(1, 1));
-				}catch(std::invalid_argument){
-					std::cout << "You entered an invalid input for the line number!\n";
-				}				
-				
-				if (lineSelect < 0 || lineSelect >7) {
-					std::cout << "Wrong input!\n";
+				int columnSelect;
+				if(input != nullptr){
+					lineSelect = (*input)[0];
+					columnSelect = (*input)[1];
+				}
+				else{
+					std::cout << "Wrong Input!";
 					break;
 				}
-
 				if (!((*(*chessBoard[lineSelect])[columnSelect]).get_player() == currentPlayer)) {
 					std::cout << "You can only select figures of player " << currentPlayer << "\n";
 					break;
@@ -106,36 +151,22 @@ int main()
 				
 				std::cout << "Please enter a target position:\n";
 				std::cin >> targetPosition;
-				std::string colTarget = targetPosition.substr(0,1);
-				std::string lTarget = targetPosition.substr(1,1);
-				int columnTarget;
-				if (colTarget == "A") { columnTarget = 0; }
-				else if (colTarget == "B") { columnTarget = 1; }
-				else if (colTarget == "C") { columnTarget = 2; }
-				else if (colTarget == "D") { columnTarget = 3; }
-				else if (colTarget == "E") { columnTarget = 4; }
-				else if (colTarget == "F") { columnTarget = 5; }
-				else if (colTarget == "G") { columnTarget = 6; }
-				else if (colTarget == "H") { columnTarget = 7; }
-				else {
-					std::cout << "Wrong column input!\n";
-					break;
-				}
-				//std::cout << "To choose the target position enter line number:\n";
-				//std::cin >> lTarget;
+
+				input = checkAndGetSeletedPosition(targetPosition);
 				int lineTarget;
-				try{
-					lineTarget = 8 - std::stoi(lTarget);
-				}catch(std::invalid_argument){
-					std::cout << "You entered an invalid input for the line number!" << std::endl;
+				int columnTarget;
+				if(input != nullptr){
+					lineTarget = (*input)[0];
+					columnTarget = (*input)[1];
 				}
-				if (lineTarget < 0 || lineTarget >7) {
-					std::cout << "Wrong input!\n";
+				else{
+					std::cout << "Wrong Input!";
 					break;
 				}
+
 				//Check if figure can move to target position
 				if (!(((*(*chessBoard[lineSelect])[columnSelect])).moveFigure(currentPlayer, columnSelect, lineSelect, columnTarget, lineTarget, chessBoard))) {
-					std::cout << "You can not move " << figureSelected << " to " << colTarget << lTarget << "\n";
+					std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
 					break;
 				}
 				else {
@@ -151,12 +182,12 @@ int main()
 					if (attackedKing != 0) {
 						std::cout<< std::endl;
 						if (attackedKing == currentPlayer) {//illegal
-							std::cout << "You can not move " << figureSelected << " to " << colTarget << lTarget << "\n";
+							std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
 							std::cout << "Your own kings would be attacked!\n";
 							break;
 						}
 						else if (attackedKing == 3) {//illegal
-							std::cout << "You can not move " << figureSelected << " to " << colTarget << lTarget << "\n";
+							std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
 							std::cout << "Both kings would be attacked!\n";
 							break;
 						}
