@@ -5,13 +5,13 @@
 #include <filesystem>
 #include "ChessFigures.hpp"
 
-#ifndef _SAFEANDLOADCHESS_
-#define _SAFEANDLOADCHESS_
+#ifndef _SAVEANDLOADCHESS_
+#define _SAVEANDLOADCHESS_
 
-class safeAndLoadChess {
+class saveAndLoadChess {
 public:
-	int safe(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
-		std::ofstream streamOut("StartedGames/Chess_Safe.txt");
+	int save(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP,std::string File) {
+		std::ofstream streamOut("StartedGames/"+File);
 		streamOut << std::to_string(currentP) << std::endl;
 		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
 			for (std::shared_ptr<Figure> x : *vec) {
@@ -19,12 +19,12 @@ public:
 			}
 		}
 		streamOut.close();
-		std::remove("StartedGames/Chess_Quick_Safe.txt");
+		std::remove("StartedGames/Chess_Quick_Save");
 		return 0;
 	}
 public:
-	int quicksafe(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
-		std::ofstream streamOut("StartedGames/Chess_Quick_Safe.txt");
+	int quicksave(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
+		std::ofstream streamOut("StartedGames/Chess_Quick_Save");
 		streamOut << std::to_string(currentP) << std::endl;
 		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
 			for (std::shared_ptr<Figure> x : *vec) {
@@ -119,4 +119,4 @@ public:
 	}
 };
 
-#endif _SAFEANDLOADCHESS_
+#endif _SAVEANDLOADCHESS_
