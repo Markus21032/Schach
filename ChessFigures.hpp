@@ -4,27 +4,26 @@
 
 #ifndef _FIGURE_
 #define _FIGURE_
-//Player 0: neutral
+//Player 0: neutral 
 //Player 1: top
 //Player 2: bottom
 
 class Figure {
-protected: char* sign = new char;
-protected: int* playerNumber = new int;
-protected: bool* allowedToMove = new bool;
+protected: std::shared_ptr<char> sign = std::make_shared<char>();
+protected: std::shared_ptr<int> playerNumber = std::make_shared<int>();
+protected: std::shared_ptr<bool> allowedToMove = std::make_shared<bool>();
 public: char get_Name() { return (*sign); };
 public: char get_player() { return (*playerNumber); };
 public: std::string get_2print() { return (*sign) + std::to_string((*playerNumber)); };
 public: void assign_to_player(int x) { *playerNumber = x; };
 protected: void init_figure() { };
-public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { (*allowedToMove) = false; return allowedToMove; };
-public: void delete_figure_values() { delete(sign); delete(playerNumber); };
+public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
 };
 
 class NoneFigure :public Figure {
 public: void assign_to_player() { *playerNumber = 0; };
 public: void init_figure() { *sign = '0'; assign_to_player(); };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { (*allowedToMove) = false; return allowedToMove; };
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
 };
 class PawnFigure :public Figure {
 public: void init_figure() { *sign = 'B'; };
