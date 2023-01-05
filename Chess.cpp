@@ -11,6 +11,7 @@
 
 std::string defaultSaveFileName = "Chess_Save";
 std::string saveFileName = "d";
+int currentPlayer = 1;
  
 void exit_handler(){
 	std::string quicksave = "StartedGames/Chess_Quick_Save";
@@ -99,7 +100,7 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>
 
 int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	bool isAttacked = false;
-	int attackePlayer = 0;
+	int attackedPlayer = 0;
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if ((*chessBoard[i])[j]->get_Name() == 'K') {
@@ -276,11 +277,18 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 				}
 				
 				
-				if (isAttacked) { attackePlayer = attackePlayer + playerOfKing; }
+				if (isAttacked) { attackedPlayer = attackedPlayer + playerOfKing; }
 			}
 		}
 	}
-	return attackePlayer;
+	return attackedPlayer;
+}
+
+
+bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
+	bool mate = false;
+	
+	return mate;
 }
 
 int main()
@@ -293,7 +301,6 @@ int main()
 	saveAndLoadChess saveAndLoad;
 	printer.print(chessBoard);
 	bool play = true;
-	int currentPlayer = 1;
 	while (play) {
 		std::string choice;
 		std::cout << "Player " << currentPlayer << " Type:\n";
@@ -397,9 +404,11 @@ int main()
 				std::cout<< std::endl;
 				if (attackedKing != 3) {
 					std::cout << "The King of " << attackedKing << " gets attacked!\n";
+					bool mate = isMate(chessBoard);
 				}
 				else {
 					std::cout << "Both kings are attacked!\n";
+					//todo: this move is not allowed
 				}
 			}			
 			saveAndLoad.quicksave(chessBoard,currentPlayer);
