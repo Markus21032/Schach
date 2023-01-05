@@ -41,4 +41,4 @@ public:
 	}
 };
 
-#endif _PRINTCHESS_
+#endif //_PRINTCHESS_

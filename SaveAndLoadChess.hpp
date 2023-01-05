@@ -119,4 +119,4 @@ public:
 	}
 };
 
-#endif _SAVEANDLOADCHESS_
+#endif //_SAVEANDLOADCHESS_

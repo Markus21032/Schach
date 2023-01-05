@@ -197,7 +197,7 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 		}
 	}
 	return attackedPlayer;
-}
+};
 
 
 bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int attackedKing) {
@@ -215,7 +215,7 @@ bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& 
 
 	
 	return mate;
-}
+};
 
 
-#endif _Algorithm_
+#endif //_Algorithm_

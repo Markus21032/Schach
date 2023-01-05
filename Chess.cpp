@@ -139,31 +139,53 @@ int main()
 					break;
 				}
 				else {
-					*(*chessBoard[lineTarget])[columnTarget] = *(*chessBoard[lineSelect])[columnSelect];
-					
+					//move figure on temp board
+					auto tempBoard = copyBoard(chessBoard);
+					*(*tempBoard[lineTarget])[columnTarget] = *(*tempBoard[lineSelect])[columnSelect];
 					std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
 					f->init_figure();
-					(*chessBoard[lineSelect])[columnSelect] = f;
+					(*tempBoard[lineSelect])[columnSelect] = f;
+
+
+					int attackedKing = isKingAttacked(tempBoard);
+					if (attackedKing != 0) {
+						std::cout<< std::endl;
+						if (attackedKing == currentPlayer) {//illegal
+							std::cout << "You can not move " << figureSelected << " to " << colTarget << lTarget << "\n";
+							std::cout << "Your own kings would be attacked!\n";
+							break;
+						}
+						else if (attackedKing == 3) {//illegal
+							std::cout << "You can not move " << figureSelected << " to " << colTarget << lTarget << "\n";
+							std::cout << "Both kings would be attacked!\n";
+							break;
+						}
+						else{//legal
+							std::cout << "The King of " << attackedKing << " gets attacked!\n";
+
+							//move on chessBoard
+							*(*chessBoard[lineTarget])[columnTarget] = *(*chessBoard[lineSelect])[columnSelect];
+							std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+							f->init_figure();
+							(*chessBoard[lineSelect])[columnSelect] = f;
+
+							//check if mate
+							bool mate = isMate(chessBoard, attackedKing);
+						}
+					}
+					else{//move on chessBoard
+						*(*chessBoard[lineTarget])[columnTarget] = *(*chessBoard[lineSelect])[columnSelect];
+						std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+						f->init_figure();
+						(*chessBoard[lineSelect])[columnSelect] = f;
+					}		
+
 					if (currentPlayer == 1) { currentPlayer = 2; }
 					else { currentPlayer = 1; }
 				}
 				break;
 			}
-			int attackedKing = isKingAttacked(chessBoard);
-			if (attackedKing != 0) {
-				std::cout<< std::endl;
-				if (attackedKing == currentPlayer) {
-					//illegal
-				}
-				else if (attackedKing == 3) {
-					std::cout << "Both kings are attacked!\n";
-					//todo: this move is not allowed
-				}
-				else{
-					std::cout << "The King of " << attackedKing << " gets attacked!\n";
-					bool mate = isMate(chessBoard, attackedKing);
-				}
-			}			
+			
 			saveAndLoad.quicksave(chessBoard,currentPlayer);
 		}
 		else if (choice == "2") {

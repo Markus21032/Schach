@@ -65,7 +65,7 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>
 		}
 		chessBoard.push_back(fig);
 	}
-}
+};
 
 //copyes the chessboard
 std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> copyBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard){
@@ -116,5 +116,6 @@ std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> copyBoard(std
 	}
 
 	return copy;
-}
-#endif _INITANDCOPY_
+};
+
+#endif //_INITANDCOPY_

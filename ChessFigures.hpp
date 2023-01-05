@@ -367,4 +367,4 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 }
 };
 
-#endif _FIGURE_
+#endif //_FIGURE_
