@@ -98,6 +98,11 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>
 	}
 }
 
+//returns the attacked player
+//0 -> none
+//1 -> player 1
+//2 -> player 2
+//3 -> both players (illegal move)
 int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
 	bool isAttacked = false;
 	int attackedPlayer = 0;
