@@ -13,7 +13,7 @@ protected: std::shared_ptr<char> sign = std::make_shared<char>();
 protected: std::shared_ptr<int> playerNumber = std::make_shared<int>();
 protected: std::shared_ptr<bool> allowedToMove = std::make_shared<bool>();
 public: char get_Name() { return (*sign); };
-public: char get_player() { return (*playerNumber); };
+public: int get_player() { return (*playerNumber); };
 public: std::string get_2print() { return (*sign) + std::to_string((*playerNumber)); };
 public: void assign_to_player(int x) { *playerNumber = x; };
 protected: void init_figure() { };

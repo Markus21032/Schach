@@ -7,6 +7,7 @@
 #include "ChessFigures.hpp"
 #include "PrintChess.hpp"
 #include "SaveAndLoadChess.hpp"
+#include "Algorithm.hpp"
 
 
 std::string defaultSaveFileName = "Chess_Save";
@@ -38,263 +39,7 @@ void exit_handler(){
 	}
 }
 
-void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
-	for (int i = 0; i < 8; i++) {
-		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
-		if (i == 0 || i == 7) {
-			int player = 1;
-			if (i == 7) { player = 2; }
-			std::shared_ptr<TowerFigure> t1 = std::make_shared< TowerFigure>();
-			t1->init_figure();
-			t1->assign_to_player(player);
-			fig->push_back(t1);
-			std::shared_ptr<JumperFigure> j1 = std::make_shared< JumperFigure>();
-			j1->init_figure();
-			j1->assign_to_player(player);
-			fig->push_back(j1);
-			std::shared_ptr<RunnerFigure> r1 = std::make_shared< RunnerFigure>();
-			r1->init_figure();
-			r1->assign_to_player(player);
-			fig->push_back(r1);
-			std::shared_ptr<KingFigure> k = std::make_shared< KingFigure>();
-			k->init_figure();
-			k->assign_to_player(player);
-			fig->push_back(k);
-			std::shared_ptr<QueenFigure> q = std::make_shared< QueenFigure>();
-			q->init_figure();
-			q->assign_to_player(player);
-			fig->push_back(q);
-			std::shared_ptr<RunnerFigure> r2 = std::make_shared< RunnerFigure>();
-			r2->init_figure();
-			r2->assign_to_player(player);
-			fig->push_back(r2);
-			std::shared_ptr<JumperFigure> j2 = std::make_shared< JumperFigure>();
-			j2->init_figure();
-			j2->assign_to_player(player);
-			fig->push_back(j2);
-			std::shared_ptr<TowerFigure> t2 = std::make_shared< TowerFigure>();
-			t2->init_figure();
-			t2->assign_to_player(player);
-			fig->push_back(t2);
-		}
-		else if (i == 1 || i == 6) {
-			int player = 1;
-			if (i == 6) { player = 2; }
-			for (int j = 0; j < 8; j++) {
-				std::shared_ptr<PawnFigure> f = std::make_shared< PawnFigure>();
-				f->init_figure();
-				f->assign_to_player(player);
-				fig->push_back(f);
-			}
-		}
-		else {
-			for (int j = 0; j < 8; j++) {
-				std::shared_ptr<NoneFigure> f = std::make_shared< NoneFigure>();
-				f->init_figure();
-				fig->push_back(f);
-			}
-		}
-		chessBoard.push_back(fig);
-	}
-}
 
-//returns the attacked player
-//0 -> none
-//1 -> player 1
-//2 -> player 2
-//3 -> both players (illegal move)
-int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
-	bool isAttacked = false;
-	int attackedPlayer = 0;
-	for (int i = 0; i < 8; i++) {
-		for (int j = 0; j < 8; j++) {
-			if ((*chessBoard[i])[j]->get_Name() == 'K') {
-				int playerOfKing = (*chessBoard[i])[j]->get_player();
-				//check schraeg
-				int c1 = j+1;
-				int c2 = j-1;
-				for (int l = i+1; l < 8; l++) {// i->7
-					if (c1 < 8 && c1 >= 0) {
-						if ((*chessBoard[l])[c1]->get_player() != 0 && (*chessBoard[l])[c1]->get_player() == playerOfKing) {
-							c1 = 8;
-						}
-						else if ((*chessBoard[l])[c1]->get_player() != 0 && (*chessBoard[l])[c1]->get_player() != playerOfKing) {
-							if ((*chessBoard[l])[c1]->get_Name() == 'L' || (*chessBoard[l])[c1]->get_Name() == 'Q') {
-								isAttacked = true;
-								break;
-							}
-						}
-					}
-					if (c2 < 8 && c2 >= 0) {
-						if ((*chessBoard[l])[c2]->get_player() != 0 && (*chessBoard[l])[c2]->get_player() == playerOfKing) {
-							c2 = -1;
-						}
-						else if ((*chessBoard[l])[c2]->get_player() != 0 && (*chessBoard[l])[c2]->get_player() != playerOfKing) {
-							if ((*chessBoard[l])[c2]->get_Name() == 'L' || (*chessBoard[l])[c2]->get_Name() == 'Q') {
-								isAttacked = true;
-								break;
-							}
-						}
-					}
-					c1++;
-					c2--;
-				}
-				int c3 = j+1;
-				int c4 = j-1;
-				for (int l = i-1; l >= 0; l--) {// i->0
-					if (c3 < 8 && c3 >= 0) {
-						if ((*chessBoard[l])[c3]->get_player() != 0 && (*chessBoard[l])[c3]->get_player() == playerOfKing) {
-							c3 = 8;
-						}
-						else if ((*chessBoard[l])[c3]->get_player() != 0 && (*chessBoard[l])[c3]->get_player() != playerOfKing) {
-							if ((*chessBoard[l])[c3]->get_Name() == 'L' || (*chessBoard[l])[c3]->get_Name() == 'Q') {
-								isAttacked = true;
-								break;
-							}
-						}
-					}
-					if (c4 < 8 && c4 >= 0) {
-						if ((*chessBoard[l])[c4]->get_player() != 0 && (*chessBoard[l])[c4]->get_player() == playerOfKing) {
-							c4 = -1;
-						}
-						else if ((*chessBoard[l])[c4]->get_player() != 0 && (*chessBoard[l])[c4]->get_player() != playerOfKing) {
-							if ((*chessBoard[l])[c4]->get_Name() == 'L' || (*chessBoard[l])[c4]->get_Name() == 'Q') {
-								isAttacked = true;
-								break;
-							}
-						}
-					}
-					c3++;
-					c4--;
-				}
-				// check gerade
-				for(int lup = i-1; lup >=0;lup--){
-					if ((*chessBoard[lup])[j]->get_player() != 0 && (*chessBoard[lup])[j]->get_player() == playerOfKing) {
-						lup = -1;
-					}
-					else if ((*chessBoard[lup])[j]->get_player() != 0 && (*chessBoard[lup])[j]->get_player() != playerOfKing) {
-						if ((*chessBoard[lup])[j]->get_Name() == 'T' || (*chessBoard[lup])[j]->get_Name() == 'Q') {
-							isAttacked = true;
-							break;
-						}
-					}
-				}
-				for(int ldown = i+1; ldown <8; ldown++){
-					if ((*chessBoard[ldown])[j]->get_player() != 0 && (*chessBoard[ldown])[j]->get_player() == playerOfKing) {
-						ldown = 8;
-					}
-					else if ((*chessBoard[ldown])[j]->get_player() != 0 && (*chessBoard[ldown])[j]->get_player() != playerOfKing) {
-						if ((*chessBoard[ldown])[j]->get_Name() == 'T' || (*chessBoard[ldown])[j]->get_Name() == 'Q') {
-							isAttacked = true;
-							break;
-						}
-					}
-				}
-				for(int cleft = j-1; cleft >=0;cleft--){
-					if ((*chessBoard[i])[cleft]->get_player() != 0 && (*chessBoard[i])[cleft]->get_player() == playerOfKing) {
-						cleft = -1;
-					}
-					else if ((*chessBoard[i])[cleft]->get_player() != 0 && (*chessBoard[i])[cleft]->get_player() != playerOfKing) {
-						if ((*chessBoard[i])[cleft]->get_Name() == 'T' || (*chessBoard[i])[cleft]->get_Name() == 'Q') {
-							isAttacked = true;
-							break;
-						}
-					}
-				}
-				for(int cright = j+1; cright <8;cright++){
-					if ((*chessBoard[i])[cright]->get_player() != 0 && (*chessBoard[i])[cright]->get_player() == playerOfKing) {
-						cright = 8;
-					}
-					else if ((*chessBoard[i])[cright]->get_player() != 0 && (*chessBoard[i])[cright]->get_player() != playerOfKing) {
-						if ((*chessBoard[i])[cright]->get_Name() == 'T' || (*chessBoard[i])[cright]->get_Name() == 'Q') {
-							isAttacked = true;
-							break;
-						}
-					}
-				}
-				// check springer
-				if((i+1)<8 && (j+2)<8){
-					if ((*chessBoard[i+1])[j+2]->get_Name() == 'S' && (*chessBoard[i+1])[j+2]->get_player() != playerOfKing) {
-								isAttacked = true;
-					}
-				}
-				if((i+1)<8 && (j-2)>=0){
-					if ((*chessBoard[i+1])[j-2]->get_Name() == 'S' && (*chessBoard[i+1])[j-2]->get_player() != playerOfKing) {
-								isAttacked = true;
-					}
-				}
-				if((i-1)>=0 && (j+2)<8){
-					if ((*chessBoard[i-1])[j+2]->get_Name() == 'S' && (*chessBoard[i-1])[j+2]->get_player() != playerOfKing) {
-								isAttacked = true;
-					}
-				}
-				if((i-1)>=0 && (j-2)>=0){
-					if ((*chessBoard[i-1])[j-2]->get_Name() == 'S' && (*chessBoard[i-1])[j-2]->get_player() != playerOfKing) {
-								isAttacked = true;
-					}
-				}
-
-				if((i+2)<8 && (j+1)<8){
-					if ((*chessBoard[i+2])[j+1]->get_Name() == 'S' && (*chessBoard[i+2])[j+1]->get_player() != playerOfKing) {
-								isAttacked = true;
-					}
-				}
-				if((i+2)<8 && (j-1)>=0){
-					if ((*chessBoard[i+2])[j-1]->get_Name() == 'S' && (*chessBoard[i+2])[j-1]->get_player() != playerOfKing) {
-								isAttacked = true;
-					}
-				}
-				if((i-2)>=0 && (j+1)<8){
-					if ((*chessBoard[i-2])[j+1]->get_Name() == 'S' && (*chessBoard[i-2])[j+1]->get_player() != playerOfKing) {
-							isAttacked = true;
-					}
-				}
-				if((i-2)>=0 && (j-1)>=0){
-					if ((*chessBoard[i-2])[j-1]->get_Name() == 'S' && (*chessBoard[i-2])[j-1]->get_player() != playerOfKing) {
-							isAttacked = true;
-					}
-				}
-
-				//check Bauer
-				if(playerOfKing==1){
-					if((i+1)<8 && (j-1)>=0){
-						if ((*chessBoard[i+1])[j-1]->get_Name() == 'B' && (*chessBoard[i+1])[j-1]->get_player() != playerOfKing) {
-							isAttacked = true;
-						}
-					}
-					if((i+1)<8 && (j+1)<8){
-						if ((*chessBoard[i+1])[j+1]->get_Name() == 'B' && (*chessBoard[i+1])[j+1]->get_player() != playerOfKing) {
-							isAttacked = true;
-						}
-					}
-				}
-				else{
-					if((i-1)>=0 && (j-1)>=0){
-						if ((*chessBoard[i-1])[j-1]->get_Name() == 'B' && (*chessBoard[i-1])[j-1]->get_player() != playerOfKing) {
-							isAttacked = true;
-						}
-					}
-					if((i-1)>=0 && (j+1)<8){
-						if ((*chessBoard[i-1])[j+1]->get_Name() == 'B' && (*chessBoard[i-1])[j+1]->get_player() != playerOfKing) {
-							isAttacked = true;
-						}
-					}
-				}
-				
-				
-				if (isAttacked) { attackedPlayer = attackedPlayer + playerOfKing; }
-			}
-		}
-	}
-	return attackedPlayer;
-}
-
-
-bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard) {
-	bool mate = false;
-	
-	return mate;
-}
 
 int main()
 {
@@ -407,13 +152,16 @@ int main()
 			int attackedKing = isKingAttacked(chessBoard);
 			if (attackedKing != 0) {
 				std::cout<< std::endl;
-				if (attackedKing != 3) {
-					std::cout << "The King of " << attackedKing << " gets attacked!\n";
-					bool mate = isMate(chessBoard);
+				if (attackedKing == currentPlayer) {
+					//illegal
 				}
-				else {
+				else if (attackedKing == 3) {
 					std::cout << "Both kings are attacked!\n";
 					//todo: this move is not allowed
+				}
+				else{
+					std::cout << "The King of " << attackedKing << " gets attacked!\n";
+					bool mate = isMate(chessBoard, attackedKing);
 				}
 			}			
 			saveAndLoad.quicksave(chessBoard,currentPlayer);
