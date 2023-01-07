@@ -2,11 +2,12 @@
 #include <vector>
 #include <memory>
 
+
 #ifndef _FIGURE_
 #define _FIGURE_
-//Player 0: neutral 
-//Player 1: top
-//Player 2: bottom
+//currentPlayer0: neutral 
+//currentPlayer1: top
+//currentPlayer2: bottom
 
 class Figure {
 protected: 	char sign;
@@ -22,13 +23,13 @@ public: 	char get_Name() { return sign; };
 			virtual std::string get_2print() = 0;
 			virtual void assign_to_player(int x) { playerNumber = x; };
 			virtual void init_figure() = 0;
-			virtual bool isValidMove(int player,  int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { return false; };
+			virtual bool isValidMove( int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) { return false; };
 };
 
 class NoneFigure :public Figure {
 public: virtual std::string get_2print() override {return " ";}
 public: void init_figure() { sign = '0'; assign_to_player(0); };
-public: bool isValidMove (int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override { return false; };
+public: bool isValidMove (int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override { return false; };
 };
 
 class PawnFigure :public Figure {
@@ -41,9 +42,9 @@ std::string get_2print() override {
 		return u8"\u265F";
 	}
 }
-public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
+public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
-	if (player == 1) {
+	if (currentPlayer == 1) {
 		if (row == 1 && (row + 2) == rowTarget) {
 			if (column == colTarget) {
 				int l11 = row + 1;
@@ -62,12 +63,12 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 			else if ((column + 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
 			}
 			else if ((column - 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
 			}
 		}
 	}
@@ -86,12 +87,12 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 			else if ((column + 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
 			}
 			else if ((column - 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
 			}
 		}
 	}
@@ -109,52 +110,52 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
+public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
 	if ((row - 1) == rowTarget) {
 		if (column == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 		else if ((column + 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 		else if ((column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	else if ((row + 1) == rowTarget) {
 		if (column == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 		else if ((column + 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 		else if ((column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	else if (row == rowTarget) {
 		if ((column + 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 		else if ((column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	return false;
@@ -171,7 +172,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
+public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (row == rowTarget) {
@@ -193,7 +194,7 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	else if (column == colTarget) {
@@ -215,7 +216,7 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	else if (abs(row - rowTarget) == abs(column - colTarget)) {
@@ -263,7 +264,7 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	return false;
@@ -280,7 +281,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
+public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (row == rowTarget) {
@@ -302,7 +303,7 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	else if (column == colTarget) {
@@ -324,7 +325,7 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	return true;
@@ -341,7 +342,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
+public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (abs(row - rowTarget) == abs(column - colTarget)) {
@@ -389,7 +390,7 @@ public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<s
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	return false;
@@ -406,20 +407,20 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool isValidMove(int player, int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
+public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
 	if ((row + 2) == rowTarget || (row - 2) == rowTarget) {
 		if ((column + 1) == colTarget || (column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	else if ((column + 2) == colTarget || (column - 2) == colTarget) {
 		if ((row + 1) == rowTarget || (row - 1) == rowTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != player && signT != 'K') { return true; }
+			if (playerT != currentPlayer && signT != 'K') { return true; }
 		}
 	}
 	return false;

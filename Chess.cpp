@@ -10,9 +10,11 @@ std::string saveFileName = "d";
 int currentPlayer = 1;
 
 #include "ChessFigures.hpp"
+#include "ChessBoard.hpp"
 #include "PrintChess.hpp"
 #include "SaveAndLoadChess.hpp"
 #include "Algorithm.hpp"
+
 
  
 void exit_handler(){
@@ -108,8 +110,7 @@ int main()
 {
 	std::atexit(exit_handler);
 
-	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard;
-	initBoard(chessBoard);
+	ChessBoard chessBoard;
 	printChess printer;
 	saveAndLoadChess saveAndLoad;
 	printer.print(chessBoard);
@@ -142,7 +143,7 @@ int main()
 					std::cout << "Wrong Input!";
 					break;
 				}
-				if (!((*(*chessBoard[lineSelect])[columnSelect]).get_player() == currentPlayer)) {
+				if (!(chessBoard.getFigure(lineSelect,columnSelect)->get_player() == currentPlayer)) {
 					std::cout << "You can only select figures of player " << currentPlayer << "\n";
 					break;
 				}
@@ -165,22 +166,18 @@ int main()
 				}
 
 				//Check if figure can move to target position
-				if (!(((*(*chessBoard[lineSelect])[columnSelect])).isValidMove(currentPlayer, lineTarget, columnTarget, chessBoard))) {
+				if (!(chessBoard.validateMove(lineSelect,columnSelect, lineTarget, columnTarget))) {
 					std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
 					break;
 				}
 				else {
 					//move figure on temp board
-					auto tempBoard = copyBoard(chessBoard);
-					(*tempBoard[lineTarget])[columnTarget] = (*tempBoard[lineSelect])[columnSelect];
-					(*tempBoard[lineTarget])[columnTarget]->setCoordinates(lineTarget,columnTarget);
-					std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
-					f->init_figure();
-					f->setCoordinates(lineSelect,columnSelect);
-					(*tempBoard[lineSelect])[columnSelect] = f;
+					ChessBoard tempChessBoard;
+					tempChessBoard = copyBoard(chessBoard);
+					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
 
 
-					int attackedKing = isKingAttacked(tempBoard);
+					int attackedKing = inCheck(tempChessBoard.getBoard());
 					if (attackedKing != 0) {
 						std::cout<< std::endl;
 						if (attackedKing == currentPlayer) {//illegal
@@ -197,24 +194,14 @@ int main()
 							std::cout << "The King of " << attackedKing << " gets attacked!\n";
 
 							//move on chessBoard
-							(*chessBoard[lineTarget])[columnTarget] = (*chessBoard[lineSelect])[columnSelect];
-							(*chessBoard[lineTarget])[columnTarget]->setCoordinates(lineTarget,columnTarget);
-							std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
-							f->init_figure();
-							f->setCoordinates(lineSelect,columnSelect);
-							(*chessBoard[lineSelect])[columnSelect] = f;
+							chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
 							//check if mate
-							bool mate = isMate(chessBoard, attackedKing);
+							//bool mate = isCheckMate(chessBoard, attackedKing);
 						}
 					}
 					else{//move on chessBoard
-						(*chessBoard[lineTarget])[columnTarget] = (*chessBoard[lineSelect])[columnSelect];
-						(*chessBoard[lineTarget])[columnTarget]->setCoordinates(lineTarget,columnTarget);
-						std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
-						f->init_figure();
-						f->setCoordinates(lineSelect,columnSelect);
-						(*chessBoard[lineSelect])[columnSelect] = f;
+						chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 					}		
 
 					if (currentPlayer == 1) { currentPlayer = 2; }
@@ -223,7 +210,7 @@ int main()
 				break;
 			}
 			
-			saveAndLoad.quicksave(chessBoard,currentPlayer);
+			saveAndLoad.quicksave(chessBoard.getBoard());
 		}
 		else if (choice == "2") {
 			printer.print(chessBoard);
@@ -233,14 +220,13 @@ int main()
 			std::cout<< "Enter save-file-name or type d for default save" <<std::endl;
 			std::cin >>  saveFileName;
 			if(saveFileName == "d"){
-				saveAndLoad.save(chessBoard, currentPlayer,defaultSaveFileName);
+				saveAndLoad.save(chessBoard.getBoard(), defaultSaveFileName);
 			}
 			else{
-				saveAndLoad.save(chessBoard, currentPlayer,saveFileName);
+				saveAndLoad.save(chessBoard.getBoard(), saveFileName);
 				}
 		}
 		else if (choice == "L") {
-			chessBoard.clear();
 		
 			bool gameIsSelected = false;
 			std::string selectedGame = "";
@@ -262,19 +248,17 @@ int main()
 					std::cout << "There is no game with the entered name. Please try again.\n";
 				}				
 			}
-			currentPlayer = saveAndLoad.load(chessBoard, selectedGame);
-			if(currentPlayer == 3){
-				chessBoard.clear();
-				initBoard(chessBoard);
-				currentPlayer = 1;
+			std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoardVector;
+			currentPlayer = saveAndLoad.load(chessBoardVector, selectedGame);
+			chessBoard.overrideBoard(chessBoardVector);
+			if(currentPlayer != 1 && currentPlayer != 2){
+				chessBoard.resetBoard();
 			}
-			saveAndLoad.quicksave(chessBoard,currentPlayer);
+			saveAndLoad.quicksave(chessBoard.getBoard());
 		}
 		else if (choice == "R") {
-			chessBoard.clear();
-			initBoard(chessBoard);
-			currentPlayer = 1;
-			saveAndLoad.quicksave(chessBoard,currentPlayer);
+			chessBoard.resetBoard();
+			saveAndLoad.quicksave(chessBoard.getBoard());
 		}
 		else if (choice == "E") { play = false; }
 		else { std::cout << "Wrong input, try again.\n"; }

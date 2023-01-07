@@ -7,7 +7,7 @@
  
 class printChess {
 public:
-	void print(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& c) {
+	void print(ChessBoard c) {
 		std::cout << "=======================================\n";
 		std::cout << "||-| A | B | C | D | E | F | G | H |-||\n";
 		std::cout << "||=|===============================|=||\n";
@@ -15,7 +15,7 @@ public:
 			std::cout << "||" << 8 - i << "| ";
 			for (int j = 0; j < 8; j++) {
 
-				std::cout << (*(*c[i])[j]).get_2print();
+				std::cout << c.getFigure(i,j)->get_2print();
 				
 				if (j < 7) {
 					std::cout << " | ";

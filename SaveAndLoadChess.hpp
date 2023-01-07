@@ -10,9 +10,9 @@
 
 class saveAndLoadChess {
 public:
-	int save(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP,std::string File) {
+	int save(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard, std::string File) {
 		std::ofstream streamOut("StartedGames/"+File);
-		streamOut << std::to_string(currentP) << std::endl;
+		streamOut << std::to_string(currentPlayer) << std::endl;
 		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
 			for (std::shared_ptr<Figure> x : *vec) {
 				streamOut << x->get_Name() << "\n" << std::to_string(x->get_player()) << std::endl;
@@ -23,9 +23,9 @@ public:
 		return 0;
 	}
 public:
-	int quicksave(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& chessBoard, int currentP) {
+	int quicksave(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard) {
 		std::ofstream streamOut("StartedGames/Chess_Quick_Save");
-		streamOut << std::to_string(currentP) << std::endl;
+		streamOut << std::to_string(currentPlayer) << std::endl;
 		for (std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec : chessBoard) {
 			for (std::shared_ptr<Figure> x : *vec) {
 				streamOut << x->get_Name() << "\n" << std::to_string(x->get_player()) << std::endl;

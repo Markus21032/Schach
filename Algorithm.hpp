@@ -13,7 +13,7 @@
 //1 -> player 1
 //2 -> player 2
 //3 -> both players (illegal move)
-int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >& chessBoard) {
+int inCheck(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > chessBoard) {
 	bool isAttacked = false;
 	int attackedPlayer = 0;
 	for (int i = 0; i < 8; i++) {
@@ -199,9 +199,11 @@ int isKingAttacked(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figur
 	return attackedPlayer;
 };
 
-
-bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >& chessBoard, int attackedKing) {
-	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > board = copyBoard(chessBoard);
+/*
+bool isCheckMate(ChessBoard chessBoard, int attackedKing) {
+	ChessBoard tempChessBoard;
+	tempChessBoard = copyBoard(chessBoard);
+	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> board = tempChessBoard.getBoard();
 	bool mate = false;
 	int kingposition[2];
 
@@ -215,13 +217,13 @@ bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > 
 	}
 
 	//Fall 1: König kann sich selbstständig befreien
-	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(currentPlayer, kingposition[0]+1, kingposition[1], board))){ //Check if King is movable to postion
+	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(kingposition[0]+1, kingposition[1], board))){ //Check if King is movable to postion
 
 		//Move Figure
-		(*chessBoard[kingposition[0]])[kingposition[1]] = (*chessBoard[kingposition[0]+1])[kingposition[1]];
+		(*board[kingposition[0]])[kingposition[1]] = (*chessBoard[kingposition[0]+1])[kingposition[1]];
 		std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 		f->init_figure();
-		(*chessBoard[kingposition[0]])[kingposition[1]] = f;
+		(*board[kingposition[0]])[kingposition[1]] = f;
 
 		if(isKingAttacked(board) != attackedKing){ // Check if King is not attacked anymore after move
 			return false;
@@ -236,7 +238,7 @@ bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > 
 
 	
 	return mate;
-};
+};*/
 
 
 #endif //_Algorithm_
