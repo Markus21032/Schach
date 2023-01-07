@@ -18,10 +18,8 @@ public:
 					std::cout << (*(*c[i])[j]).get_2print();
 				}
 				else{
-					std::cout << " ";
+					std::cout << "O";
 				}
-
-
 				if (j < 7) {
 					std::cout << " | ";
 				}
