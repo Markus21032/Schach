@@ -165,7 +165,7 @@ int main()
 				}
 
 				//Check if figure can move to target position
-				if (!(((*(*chessBoard[lineSelect])[columnSelect])).moveFigure(currentPlayer, columnSelect, lineSelect, columnTarget, lineTarget, chessBoard))) {
+				if (!(((*(*chessBoard[lineSelect])[columnSelect])).isValidMove(currentPlayer, columnSelect, lineSelect, columnTarget, lineTarget, chessBoard))) {
 					std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
 					break;
 				}

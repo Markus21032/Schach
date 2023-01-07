@@ -16,13 +16,13 @@ public: int get_player() { return (*playerNumber); };
 public: virtual std::string get_2print() = 0;
 public: virtual void assign_to_player(int x) { *playerNumber = x; };
 public: virtual void init_figure() { };
-public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { return false; };
+public: virtual bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { return false; };
 };
 
 class NoneFigure :public Figure {
 public: virtual std::string get_2print() override {return " ";}
 public: void init_figure() { *sign = '0'; assign_to_player(0); };
-public: bool moveFigure (int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override { return false; };
+public: bool isValidMove (int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override { return false; };
 };
 
 class PawnFigure :public Figure {
@@ -35,7 +35,7 @@ std::string get_2print() override {
 		return u8"\u265F";
 	}
 }
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+public: bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
 	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	if (player == 1) {
 		if (l1 == 1 && (l1 + 2) == l2) {
@@ -103,7 +103,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override{
+public: bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override{
 	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	if ((l1 - 1) == l2) {
 		if (c1 == c2) {
@@ -165,7 +165,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+public: bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
 	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (l1 == l2) {
@@ -274,7 +274,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override{
+public: bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override{
 	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (l1 == l2) {
@@ -335,7 +335,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+public: bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
 	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (abs(l1 - l2) == abs(c1 - c2)) {
@@ -400,7 +400,7 @@ std::string get_2print() override {
 	}
 	return "";
 }
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+public: bool isValidMove(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
 	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	if ((l1 + 2) == l2 || (l1 - 2) == l2) {
 		if ((c1 + 1) == c2 || (c1 - 1) == c2) {
