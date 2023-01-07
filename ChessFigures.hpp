@@ -11,24 +11,33 @@
 class Figure {
 protected: std::shared_ptr<char> sign = std::make_shared<char>();
 protected: std::shared_ptr<int> playerNumber = std::make_shared<int>();
-protected: std::shared_ptr<bool> allowedToMove = std::make_shared<bool>();
 public: char get_Name() { return (*sign); };
 public: int get_player() { return (*playerNumber); };
-public: std::string get_2print() { return (*sign) + std::to_string((*playerNumber)); };
+public: virtual std::string get_2print() = 0;
 public: void assign_to_player(int x) { *playerNumber = x; };
 protected: void init_figure() { };
-public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
+public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { return false; };
 };
 
 class NoneFigure :public Figure {
 public: void assign_to_player() { *playerNumber = 0; };
+public: virtual std::string get_2print() override {return " ";}
 public: void init_figure() { *sign = '0'; assign_to_player(); };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { (*allowedToMove) = false; return *allowedToMove; };
+public: bool moveFigure (int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override { return false; };
 };
 class PawnFigure :public Figure {
 public: void init_figure() { *sign = 'B'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
-	(*allowedToMove) = false;
+std::string get_2print() override {
+	if(*playerNumber == 1){
+		return u8"\u2659";
+	}
+	else if(*playerNumber == 2){
+		return u8"\u265F";
+	}
+	return "";
+}
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	if (player == 1) {
 		if (l1 == 1 && (l1 + 2) == l2) {
 			if (c1 == c2) {
@@ -36,24 +45,24 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 				int playerJump = (*chessBoard[l11])[c2]->get_player();
 				if (playerJump == 0) {
 					int playerT = (*chessBoard[l2])[c2]->get_player();
-					if (playerT == 0) { (*allowedToMove) = true; }
+					if (playerT == 0) { return true; }
 				}
 			}
 		}
 		else if ((l1 + 1) == l2) {
 			if (c1 == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
-				if (playerT == 0) { (*allowedToMove) = true; }
+				if (playerT == 0) { return true; }
 			}
 			else if ((c1 + 1) == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
 				char signT = (*chessBoard[l2])[c2]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { (*allowedToMove) = true; }
+				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
 			}
 			else if ((c1 - 1) == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
 				char signT = (*chessBoard[l2])[c2]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { (*allowedToMove) = true; }
+				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
 			}
 		}
 	}
@@ -61,86 +70,104 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (l1 == 6 && (l1 - 2) == l2) {
 			if (c1 == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
-				if (playerT == 0) { (*allowedToMove) = true; }
+				if (playerT == 0) { return true; }
 			}
 		}
 		else if ((l1 - 1) == l2) {
 			if (c1 == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
-				if (playerT == 0) { (*allowedToMove) = true; }
+				if (playerT == 0) { return true; }
 			}
 			else if ((c1 + 1) == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
 				char signT = (*chessBoard[l2])[c2]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { (*allowedToMove) = true; }
+				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
 			}
 			else if ((c1 - 1) == c2) {
 				int playerT = (*chessBoard[l2])[c2]->get_player();
 				char signT = (*chessBoard[l2])[c2]->get_Name();
-				if (playerT != player && 0 != playerT && signT != 'K') { (*allowedToMove) = true; }
+				if (playerT != player && 0 != playerT && signT != 'K') { return true; }
 			}
 		}
 	}
-	return (*allowedToMove);
+	return false;
 };
 };
 class KingFigure :public Figure {
 public: void init_figure() { *sign = 'K'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
-	(*allowedToMove) = false;
+std::string get_2print() override {
+	if(*playerNumber == 1){
+		return u8"\u2654";
+	}
+	else if(*playerNumber == 2){
+		return u8"\u265A";
+	}
+	return "";
+}
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override{
+	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	if ((l1 - 1) == l2) {
 		if (c1 == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 		else if ((c1 + 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 		else if ((c1 - 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
 	else if ((l1 + 1) == l2) {
 		if (c1 == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 		else if ((c1 + 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 		else if ((c1 - 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
 	else if (l1 == l2) {
 		if ((c1 + 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 		else if ((c1 - 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
-	return (*allowedToMove);
+	return false;
 }
 };
 class QueenFigure :public Figure {
 public: void init_figure() { *sign = 'Q'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
-	(*allowedToMove) = false;
+std::string get_2print() override {
+	if(*playerNumber == 1){
+		return u8"\u2655";
+	}
+	else if(*playerNumber == 2){
+		return u8"\u265B";
+	}
+	return "";
+}
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (l1 == l2) {
 		if (c2 > c1) {
@@ -161,7 +188,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
 	else if (c1 == c2) {
@@ -183,7 +210,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
 	else if (abs(l1 - l2) == abs(c1 - c2)) {
@@ -231,16 +258,25 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
-	return (*allowedToMove);
+	return false;
 }
 };
 class TowerFigure :public Figure {
 public: void init_figure() { *sign = 'T'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
-	(*allowedToMove) = false;
+std::string get_2print() override {
+	if(*playerNumber == 1){
+		return u8"\u2656";
+	}
+	else if(*playerNumber == 2){
+		return u8"\u265C";
+	}
+	return "";
+}
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override{
+	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (l1 == l2) {
 		if (c2 > c1) {
@@ -261,7 +297,7 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
 	else if (c1 == c2) {
@@ -283,16 +319,25 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
-	return (*allowedToMove);
+	return true;
 }
 };
 class RunnerFigure :public Figure {
 public: void init_figure() { *sign = 'L'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
-	(*allowedToMove) = false;
+std::string get_2print() override {
+	if(*playerNumber == 1){
+		return u8"\u2657";
+	}
+	else if(*playerNumber == 2){
+		return u8"\u265D";
+	}
+	return "";
+}
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	bool skipsFigure = false;
 	if (abs(l1 - l2) == abs(c1 - c2)) {
 		if (l1 < l2) {
@@ -339,31 +384,40 @@ public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
-	return (*allowedToMove);
+	return false;
 }
 };
 class JumperFigure :public Figure {
 public: void init_figure() { *sign = 'S'; };
-public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) {
-	(*allowedToMove) = false;
+std::string get_2print() override {
+	if(*playerNumber == 1){
+		return u8"\u2658";
+	}
+	else if(*playerNumber == 2){
+		return u8"\u265E";
+	}
+	return "";
+}
+public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {
+	if(c2 > 7 || c2 < 0 || l2 < 0 || l2 > 7) {return false;} //if figure would move out of the board
 	if ((l1 + 2) == l2 || (l1 - 2) == l2) {
 		if ((c1 + 1) == c2 || (c1 - 1) == c2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
 	else if ((c1 + 2) == c2 || (c1 - 2) == c2) {
 		if ((l1 + 1) == l2 || (l1 - 1) == l2) {
 			int playerT = (*chessBoard[l2])[c2]->get_player();
 			char signT = (*chessBoard[l2])[c2]->get_Name();
-			if (playerT != player && signT != 'K') { (*allowedToMove) = true; }
+			if (playerT != player && signT != 'K') { return true; }
 		}
 	}
-	return (*allowedToMove);
+	return false;
 }
 };
 
