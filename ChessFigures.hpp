@@ -28,12 +28,12 @@ public: 	char get_Name() { return sign; };
 
 class NoneFigure :public Figure {
 public: virtual std::string get_2print() override {return " ";}
-public: void init_figure() { sign = '0'; assign_to_player(0); };
+public: void init_figure() override { sign = '0'; assign_to_player(0); };
 public: bool isValidMove (int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override { return false; };
 };
 
 class PawnFigure :public Figure {
-public: void init_figure() { sign = 'B'; };
+public: void init_figure() override { sign = 'B'; };
 std::string get_2print() override {
 	if(playerNumber == 1){
 		return u8"\u2659";
@@ -100,7 +100,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 };
 };
 class KingFigure :public Figure {
-public: void init_figure() { sign = 'K'; };
+public: void init_figure() override { sign = 'K'; };
 std::string get_2print() override {
 	if(playerNumber == 1){
 		return u8"\u2654";
@@ -162,7 +162,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 }
 };
 class QueenFigure :public Figure {
-public: void init_figure() { sign = 'Q'; };
+public: void init_figure() override { sign = 'Q'; };
 std::string get_2print() override {
 	if(playerNumber == 1){
 		return u8"\u2655";
@@ -271,7 +271,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 }
 };
 class TowerFigure :public Figure {
-public: void init_figure() { sign = 'T'; };
+public: void init_figure() override { sign = 'T'; };
 std::string get_2print() override {
 	if(playerNumber == 1){
 		return u8"\u2656";
@@ -332,7 +332,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 }
 };
 class RunnerFigure :public Figure {
-public: void init_figure() { sign = 'L'; };
+public: void init_figure() override { sign = 'L'; };
 std::string get_2print() override {
 	if(playerNumber == 1){
 		return u8"\u2657";
@@ -397,7 +397,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 }
 };
 class JumperFigure :public Figure {
-public: void init_figure() { sign = 'S'; };
+public: void init_figure() override { sign = 'S'; };
 std::string get_2print() override {
 	if(playerNumber == 1){
 		return u8"\u2658";
