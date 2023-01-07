@@ -47,65 +47,71 @@ public:
 			std::getline(streamIn, currentP);
 			for (int i = 0; i < 8; i++) {
 			std::shared_ptr<std::vector<std::shared_ptr<Figure>>> fig = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
-
-			for (int j = 0; j < 8; j++) {
-				std::getline(streamIn, input);
-				if (input == "0") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
-					f->init_figure();
-					fig->push_back(f);
+				for (int j = 0; j < 8; j++) {
+					std::getline(streamIn, input);
+					if (input == "0") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
+						f->init_figure();
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
+					else if (input == "B") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<PawnFigure>();
+						f->init_figure();
+						f->assign_to_player(std::stoi(player));
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
+					else if (input == "T") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<TowerFigure>();
+						f->init_figure();
+						f->assign_to_player(std::stoi(player));
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
+					else if (input == "S") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<JumperFigure>();
+						f->init_figure();
+						f->assign_to_player(std::stoi(player));
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
+					else if (input == "L") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<RunnerFigure>();
+						f->init_figure();
+						f->assign_to_player(std::stoi(player));
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
+					else if (input == "K") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<KingFigure>();
+						f->init_figure();
+						f->assign_to_player(std::stoi(player));
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
+					else if (input == "Q") {
+						std::string player;
+						std::getline(streamIn, player);
+						std::shared_ptr<Figure> f = std::make_shared<QueenFigure>();
+						f->init_figure();
+						f->assign_to_player(std::stoi(player));
+						f->setCoordinates(i,j);
+						fig->push_back(f);
+					}
 				}
-				else if (input == "B") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<PawnFigure>();
-					f->init_figure();
-					f->assign_to_player(std::stoi(player));
-					fig->push_back(f);
-				}
-				else if (input == "T") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<TowerFigure>();
-					f->init_figure();
-					f->assign_to_player(std::stoi(player));
-					fig->push_back(f);
-				}
-				else if (input == "S") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<JumperFigure>();
-					f->init_figure();
-					f->assign_to_player(std::stoi(player));
-					fig->push_back(f);
-				}
-				else if (input == "L") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<RunnerFigure>();
-					f->init_figure();
-					f->assign_to_player(std::stoi(player));
-					fig->push_back(f);
-				}
-				else if (input == "K") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<KingFigure>();
-					f->init_figure();
-					f->assign_to_player(std::stoi(player));
-					fig->push_back(f);
-				}
-				else if (input == "Q") {
-					std::string player;
-					std::getline(streamIn, player);
-					std::shared_ptr<Figure> f = std::make_shared<QueenFigure>();
-					f->init_figure();
-					f->assign_to_player(std::stoi(player));
-					fig->push_back(f);
-				}
-			}
 			chessBoard.push_back(fig);
 		}
 		streamIn.close();

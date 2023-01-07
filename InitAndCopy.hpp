@@ -16,34 +16,42 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> >
 			std::shared_ptr<Figure> t1 = std::make_shared< TowerFigure>();
 			t1->init_figure();
 			t1->assign_to_player(player);
+			t1->setCoordinates(i,0);
 			fig->push_back(t1);
 			std::shared_ptr<Figure> j1 = std::make_shared< JumperFigure>();
 			j1->init_figure();
 			j1->assign_to_player(player);
+			j1->setCoordinates(i,1);
 			fig->push_back(j1);
 			std::shared_ptr<Figure> r1 = std::make_shared< RunnerFigure>();
 			r1->init_figure();
 			r1->assign_to_player(player);
+			r1->setCoordinates(i,2);
 			fig->push_back(r1);
 			std::shared_ptr<Figure> k = std::make_shared< KingFigure>();
 			k->init_figure();
 			k->assign_to_player(player);
+			k->setCoordinates(i,3);
 			fig->push_back(k);
 			std::shared_ptr<Figure> q = std::make_shared< QueenFigure>();
 			q->init_figure();
 			q->assign_to_player(player);
+			q->setCoordinates(i,4);
 			fig->push_back(q);
 			std::shared_ptr<Figure> r2 = std::make_shared< RunnerFigure>();
 			r2->init_figure();
 			r2->assign_to_player(player);
+			r2->setCoordinates(i,5);
 			fig->push_back(r2);
 			std::shared_ptr<Figure> j2 = std::make_shared< JumperFigure>();
 			j2->init_figure();
 			j2->assign_to_player(player);
+			j2->setCoordinates(i,6);
 			fig->push_back(j2);
 			std::shared_ptr<Figure> t2 = std::make_shared< TowerFigure>();
 			t2->init_figure();
 			t2->assign_to_player(player);
+			t2->setCoordinates(i,7);
 			fig->push_back(t2);
 		}
 		else if (i == 1 || i == 6) {
@@ -53,6 +61,7 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> >
 				std::shared_ptr<Figure> f = std::make_shared< PawnFigure>();
 				f->init_figure();
 				f->assign_to_player(player);
+				f->setCoordinates(i,j);
 				fig->push_back(f);
 			}
 		}
@@ -60,6 +69,7 @@ void initBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> >
 			for (int j = 0; j < 8; j++) {
 				std::shared_ptr<Figure> f = std::make_shared< NoneFigure>();
 				f->init_figure();
+				f->setCoordinates(i,j);
 				fig->push_back(f);
 			}
 		}
@@ -78,36 +88,43 @@ std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > copyBoard(
 			if((*chessBoard[i])[j]->get_Name() == '0'){
 				std::shared_ptr<Figure> fig = std::make_shared< NoneFigure>();
 				fig->init_figure();
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 			else if((*chessBoard[i])[j]->get_Name() == 'B'){std::shared_ptr<Figure> fig = std::make_shared< PawnFigure>();
 				fig->init_figure();
 				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 			else if((*chessBoard[i])[j]->get_Name() == 'K'){std::shared_ptr<Figure> fig = std::make_shared< KingFigure>();
 				fig->init_figure();
 				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 			else if((*chessBoard[i])[j]->get_Name() == 'Q'){std::shared_ptr<Figure> fig = std::make_shared< QueenFigure>();
 				fig->init_figure();
 				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 			else if((*chessBoard[i])[j]->get_Name() == 'T'){std::shared_ptr<Figure> fig = std::make_shared< TowerFigure>();
 				fig->init_figure();
 				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 			else if((*chessBoard[i])[j]->get_Name() == 'L'){std::shared_ptr<Figure> fig = std::make_shared< RunnerFigure>();
 				fig->init_figure();
 				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 			else if((*chessBoard[i])[j]->get_Name() == 'S'){std::shared_ptr<Figure> fig = std::make_shared< JumperFigure>();
 				fig->init_figure();
 				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
 				vec->push_back(fig);
 			}
 		}

@@ -165,7 +165,7 @@ int main()
 				}
 
 				//Check if figure can move to target position
-				if (!(((*(*chessBoard[lineSelect])[columnSelect])).isValidMove(currentPlayer, columnSelect, lineSelect, columnTarget, lineTarget, chessBoard))) {
+				if (!(((*(*chessBoard[lineSelect])[columnSelect])).isValidMove(currentPlayer, lineTarget, columnTarget, chessBoard))) {
 					std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
 					break;
 				}
@@ -173,8 +173,10 @@ int main()
 					//move figure on temp board
 					auto tempBoard = copyBoard(chessBoard);
 					(*tempBoard[lineTarget])[columnTarget] = (*tempBoard[lineSelect])[columnSelect];
+					(*tempBoard[lineTarget])[columnTarget]->setCoordinates(lineTarget,columnTarget);
 					std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 					f->init_figure();
+					f->setCoordinates(lineSelect,columnSelect);
 					(*tempBoard[lineSelect])[columnSelect] = f;
 
 
@@ -196,8 +198,10 @@ int main()
 
 							//move on chessBoard
 							(*chessBoard[lineTarget])[columnTarget] = (*chessBoard[lineSelect])[columnSelect];
+							(*chessBoard[lineTarget])[columnTarget]->setCoordinates(lineTarget,columnTarget);
 							std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 							f->init_figure();
+							f->setCoordinates(lineSelect,columnSelect);
 							(*chessBoard[lineSelect])[columnSelect] = f;
 
 							//check if mate
@@ -206,8 +210,10 @@ int main()
 					}
 					else{//move on chessBoard
 						(*chessBoard[lineTarget])[columnTarget] = (*chessBoard[lineSelect])[columnSelect];
+						(*chessBoard[lineTarget])[columnTarget]->setCoordinates(lineTarget,columnTarget);
 						std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 						f->init_figure();
+						f->setCoordinates(lineSelect,columnSelect);
 						(*chessBoard[lineSelect])[columnSelect] = f;
 					}		
 

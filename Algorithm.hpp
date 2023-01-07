@@ -215,7 +215,7 @@ bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > 
 	}
 
 	//Fall 1: König kann sich selbstständig befreien
-	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(currentPlayer, kingposition[0], kingposition[1], kingposition[0]+1, kingposition[1], board))){ //Check if King is movable to postion
+	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(currentPlayer, kingposition[0]+1, kingposition[1], board))){ //Check if King is movable to postion
 
 		//Move Figure
 		(*chessBoard[kingposition[0]])[kingposition[1]] = (*chessBoard[kingposition[0]+1])[kingposition[1]];
@@ -227,7 +227,7 @@ bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > 
 			return false;
 		}
 	}
-	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(currentPlayer, kingposition[0], kingposition[1], kingposition[0]+1, kingposition[1], board)))
+	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(currentPlayer, kingposition[0]+1, kingposition[1], board)))
 
 
 	//Fall 2: Angreifende Figur kann geschlagen werden
