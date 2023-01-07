@@ -21,7 +21,7 @@ public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std:
 
 class NoneFigure :public Figure {
 public: void assign_to_player() { *playerNumber = 0; };
-public: virtual std::string get_2print() override {return "l";}
+public: virtual std::string get_2print() override {return "n";}
 public: void init_figure() { *sign = '0'; assign_to_player(); };
 public: bool moveFigure (int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override { return false; };
 };
@@ -29,12 +29,10 @@ class PawnFigure :public Figure {
 public: void init_figure() { *sign = 'B'; };
 std::string get_2print() override {
 	if(*playerNumber == 1){
-		//return u8"\u2659";
-		return "k";
+		return u8"\u2659";
 	}
 	else {
-		//return u8"\u265F";
-		return "K";
+		return u8"\u265F";
 	}
 }
 public: bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override {

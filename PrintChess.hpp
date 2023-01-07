@@ -14,12 +14,9 @@ public:
 		for (int i = 0; i < 8; i++) {
 			std::cout << "||" << 8 - i << "| ";
 			for (int j = 0; j < 8; j++) {
-				if ((*(*c[i])[j]).get_player() != 0) {
-					std::cout << (*(*c[i])[j]).get_2print();
-				}
-				else{
-					std::cout << "O";
-				}
+
+				std::cout << (*(*c[i])[j]).get_2print();
+				
 				if (j < 7) {
 					std::cout << " | ";
 				}
