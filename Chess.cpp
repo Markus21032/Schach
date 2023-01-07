@@ -172,8 +172,8 @@ int main()
 				else {
 					//move figure on temp board
 					auto tempBoard = copyBoard(chessBoard);
-					*(*tempBoard[lineTarget])[columnTarget] = *(*tempBoard[lineSelect])[columnSelect];
-					std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+					(*tempBoard[lineTarget])[columnTarget] = (*tempBoard[lineSelect])[columnSelect];
+					std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 					f->init_figure();
 					(*tempBoard[lineSelect])[columnSelect] = f;
 
@@ -195,8 +195,8 @@ int main()
 							std::cout << "The King of " << attackedKing << " gets attacked!\n";
 
 							//move on chessBoard
-							*(*chessBoard[lineTarget])[columnTarget] = *(*chessBoard[lineSelect])[columnSelect];
-							std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+							(*chessBoard[lineTarget])[columnTarget] = (*chessBoard[lineSelect])[columnSelect];
+							std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 							f->init_figure();
 							(*chessBoard[lineSelect])[columnSelect] = f;
 
@@ -205,8 +205,8 @@ int main()
 						}
 					}
 					else{//move on chessBoard
-						*(*chessBoard[lineTarget])[columnTarget] = *(*chessBoard[lineSelect])[columnSelect];
-						std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+						(*chessBoard[lineTarget])[columnTarget] = (*chessBoard[lineSelect])[columnSelect];
+						std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 						f->init_figure();
 						(*chessBoard[lineSelect])[columnSelect] = f;
 					}		

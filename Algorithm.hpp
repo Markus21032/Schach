@@ -219,7 +219,7 @@ bool isMate(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > 
 
 		//Move Figure
 		*(*chessBoard[kingposition[0]])[kingposition[1]] = *(*chessBoard[kingposition[0]+1])[kingposition[1]];
-		std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+		std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 		f->init_figure();
 		(*chessBoard[kingposition[0]])[kingposition[1]] = f;
 

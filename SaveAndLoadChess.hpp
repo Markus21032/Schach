@@ -53,14 +53,14 @@ public:
 				if (input == "0") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<NoneFigure> f = std::make_shared<NoneFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
 					f->init_figure();
 					fig->push_back(f);
 				}
 				else if (input == "B") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<PawnFigure> f = std::make_shared<PawnFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<PawnFigure>();
 					f->init_figure();
 					f->assign_to_player(std::stoi(player));
 					fig->push_back(f);
@@ -68,7 +68,7 @@ public:
 				else if (input == "T") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<TowerFigure> f = std::make_shared<TowerFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<TowerFigure>();
 					f->init_figure();
 					f->assign_to_player(std::stoi(player));
 					fig->push_back(f);
@@ -76,7 +76,7 @@ public:
 				else if (input == "S") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<JumperFigure> f = std::make_shared<JumperFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<JumperFigure>();
 					f->init_figure();
 					f->assign_to_player(std::stoi(player));
 					fig->push_back(f);
@@ -84,7 +84,7 @@ public:
 				else if (input == "L") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<RunnerFigure> f = std::make_shared<RunnerFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<RunnerFigure>();
 					f->init_figure();
 					f->assign_to_player(std::stoi(player));
 					fig->push_back(f);
@@ -92,7 +92,7 @@ public:
 				else if (input == "K") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<KingFigure> f = std::make_shared<KingFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<KingFigure>();
 					f->init_figure();
 					f->assign_to_player(std::stoi(player));
 					fig->push_back(f);
@@ -100,7 +100,7 @@ public:
 				else if (input == "Q") {
 					std::string player;
 					std::getline(streamIn, player);
-					std::shared_ptr<QueenFigure> f = std::make_shared<QueenFigure>();
+					std::shared_ptr<Figure> f = std::make_shared<QueenFigure>();
 					f->init_figure();
 					f->assign_to_player(std::stoi(player));
 					fig->push_back(f);

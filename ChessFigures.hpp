@@ -14,17 +14,17 @@ protected: std::shared_ptr<int> playerNumber = std::make_shared<int>();
 public: char get_Name() { return (*sign); };
 public: int get_player() { return (*playerNumber); };
 public: virtual std::string get_2print() = 0;
-public: void assign_to_player(int x) { *playerNumber = x; };
-protected: void init_figure() { };
+public: virtual void assign_to_player(int x) { *playerNumber = x; };
+public: virtual void init_figure() { };
 public: virtual bool moveFigure(int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) { return false; };
 };
 
 class NoneFigure :public Figure {
-public: void assign_to_player() { *playerNumber = 0; };
-public: virtual std::string get_2print() override {return "n";}
-public: void init_figure() { *sign = '0'; assign_to_player(); };
+public: virtual std::string get_2print() override {return " ";}
+public: void init_figure() { *sign = '0'; assign_to_player(0); };
 public: bool moveFigure (int player, int c1, int l1, int c2, int l2, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > >chessBoard) override { return false; };
 };
+
 class PawnFigure :public Figure {
 public: void init_figure() { *sign = 'B'; };
 std::string get_2print() override {
