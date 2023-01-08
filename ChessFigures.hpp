@@ -35,6 +35,7 @@ public: bool isValidMove (int rowTarget, int colTarget, std::vector<std::shared_
 class PawnFigure :public Figure {
 public: void init_figure() override { sign = 'B'; };
 std::string get_2print() override {
+	
 	if(playerNumber == 1){
 		return u8"\u2659";
 	}
@@ -102,6 +103,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 class KingFigure :public Figure {
 public: void init_figure() override { sign = 'K'; };
 std::string get_2print() override {
+	
 	if(playerNumber == 1){
 		return u8"\u2654";
 	}
@@ -164,6 +166,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 class QueenFigure :public Figure {
 public: void init_figure() override { sign = 'Q'; };
 std::string get_2print() override {
+	
 	if(playerNumber == 1){
 		return u8"\u2655";
 	}
@@ -273,6 +276,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 class TowerFigure :public Figure {
 public: void init_figure() override { sign = 'T'; };
 std::string get_2print() override {
+	
 	if(playerNumber == 1){
 		return u8"\u2656";
 	}
@@ -334,6 +338,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 class RunnerFigure :public Figure {
 public: void init_figure() override { sign = 'L'; };
 std::string get_2print() override {
+	
 	if(playerNumber == 1){
 		return u8"\u2657";
 	}
@@ -369,7 +374,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		else {
 			if (column < colTarget) {
 				int j = column + 1;
-				for (int i = (row - 1); i < rowTarget; i--) {
+				for (int i = (row - 1); i > rowTarget; i--) {
 					if ((*chessBoard[i])[j]->get_player() != 0) {
 						skipsFigure = true;
 					}
@@ -378,7 +383,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 			}
 			else {
 				int j = column - 1;
-				for (int i = (row - 1); i < rowTarget; i--) {
+				for (int i = (row - 1); i > rowTarget; i--) {
 					if ((*chessBoard[i])[j]->get_player() != 0) {
 						skipsFigure = true;
 					}
@@ -399,6 +404,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 class JumperFigure :public Figure {
 public: void init_figure() override { sign = 'S'; };
 std::string get_2print() override {
+	
 	if(playerNumber == 1){
 		return u8"\u2658";
 	}
