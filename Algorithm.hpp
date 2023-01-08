@@ -199,38 +199,44 @@ int inCheck(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > 
 	return attackedPlayer;
 };
 
-/*
+
 bool isCheckMate(ChessBoard chessBoard, int attackedKing) {
-	ChessBoard tempChessBoard;
-	tempChessBoard = copyBoard(chessBoard);
-	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> board = tempChessBoard.getBoard();
+	ChessBoard boardCopy;
+	boardCopy = copyBoard(chessBoard);
 	bool mate = false;
 	int kingposition[2];
 
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			if((*board[i])[j]->get_Name() == 'K' && (*board[i])[j]->get_player() == attackedKing){
+			if(boardCopy.getFigure(i, j)->get_Name() == 'K' && (boardCopy.getFigure(i, j)->get_player() == attackedKing)){
 				kingposition[0] = i; //row
 				kingposition[1] = j; //column
+				break;
 			}
 		}
 	}
 
+
 	//Fall 1: König kann sich selbstständig befreien
-	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(kingposition[0]+1, kingposition[1], board))){ //Check if King is movable to postion
+	int possibleMovesForKing [8][2] = {{1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}, {0,-1}};
 
-		//Move Figure
-		(*board[kingposition[0]])[kingposition[1]] = (*chessBoard[kingposition[0]+1])[kingposition[1]];
-		std::shared_ptr<Figure> f = std::make_shared<NoneFigure>();
-		f->init_figure();
-		(*board[kingposition[0]])[kingposition[1]] = f;
+	for(auto pos: possibleMovesForKing){
+		if(boardCopy.validateMove(kingposition[0], kingposition[1], kingposition[0]+pos[0], kingposition[1]+pos[1])){
+			std::cout << "[" << kingposition[0] << ", " << kingposition[1] << "] -> [" << kingposition[0]+pos[0] << ", " << kingposition[1]+pos[1] << "]" << std::endl;
+			//if move is valid, do it and then check if king is still in check
+			auto savedFigure = boardCopy.getFigure(kingposition[0]+pos[0], kingposition[1]+pos[1]);
 
-		if(isKingAttacked(board) != attackedKing){ // Check if King is not attacked anymore after move
-			return false;
+			boardCopy.moveFigure(kingposition[0], kingposition[1], kingposition[0]+pos[0], kingposition[1]+pos[1]);
+
+			if(inCheck(boardCopy.getBoard()) != attackedKing){ //player is no longer in check
+				return false;
+			} else{ //undo move
+				boardCopy.moveFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], kingposition[0], kingposition[1]);
+				boardCopy.setFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], savedFigure);
+			}
 		}
 	}
-	if((((*(*board[kingposition[0]])[kingposition[1]])).isValidMove(currentPlayer, kingposition[0]+1, kingposition[1], board)))
-
+	
 
 	//Fall 2: Angreifende Figur kann geschlagen werden
 	//Fall 3: Figur kann sich zwischen Angreifer und König stellen
@@ -238,7 +244,7 @@ bool isCheckMate(ChessBoard chessBoard, int attackedKing) {
 
 	
 	return mate;
-};*/
+};
 
 
 #endif //_Algorithm_

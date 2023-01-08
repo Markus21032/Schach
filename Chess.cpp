@@ -115,7 +115,9 @@ int main()
 	saveAndLoadChess saveAndLoad;
 	printer.print(chessBoard);
 	bool play = true;
+
 	while (play) {
+		//isCheckMate(chessBoard,1);
 		std::string choice;
 		std::cout << "Player " << currentPlayer << " Type:\n";
 		std::cout << "1 to move a figure\n"

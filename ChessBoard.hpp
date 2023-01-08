@@ -104,6 +104,10 @@ public:
 		(*chessBoard[fromRow])[fromColumn] = f;
     }
 
+    void setFigure(int row, int column, std::shared_ptr<Figure> figure){
+        (*chessBoard[row])[column] = figure;
+    }
+
     std::shared_ptr<Figure> getFigure(int row, int column){
         return (*chessBoard[row])[column];
     }
