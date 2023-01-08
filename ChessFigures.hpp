@@ -5,9 +5,9 @@
 
 #ifndef _FIGURE_
 #define _FIGURE_
-//currentPlayer0: neutral 
-//currentPlayer1: top
-//currentPlayer2: bottom
+//playerNumber0: neutral 
+//playerNumber1: top
+//playerNumber2: bottom
 
 class Figure {
 protected: 	char sign;
@@ -44,7 +44,7 @@ std::string get_2print() override {
 }
 public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>chessBoard) override{
 	if(colTarget > 7 || colTarget < 0 || rowTarget < 0 || rowTarget > 7) {return false;} //if figure would move out of the board
-	if (currentPlayer == 1) {
+	if (playerNumber == 1) {
 		if (row == 1 && (row + 2) == rowTarget) {
 			if (column == colTarget) {
 				int l11 = row + 1;
@@ -63,12 +63,12 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 			else if ((column + 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != playerNumber && 0 != playerT) { return true; }
 			}
 			else if ((column - 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != playerNumber && 0 != playerT) { return true; }
 			}
 		}
 	}
@@ -87,12 +87,12 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 			else if ((column + 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != playerNumber && 0 != playerT) { return true; }
 			}
 			else if ((column - 1) == colTarget) {
 				int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 				char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-				if (playerT != currentPlayer && 0 != playerT && signT != 'K') { return true; }
+				if (playerT != playerNumber && 0 != playerT) { return true; }
 			}
 		}
 	}
@@ -116,46 +116,46 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (column == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 		else if ((column + 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 		else if ((column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	else if ((row + 1) == rowTarget) {
 		if (column == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 		else if ((column + 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 		else if ((column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	else if (row == rowTarget) {
 		if ((column + 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 		else if ((column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	return false;
@@ -194,7 +194,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	else if (column == colTarget) {
@@ -216,7 +216,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	else if (abs(row - rowTarget) == abs(column - colTarget)) {
@@ -264,7 +264,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	return false;
@@ -303,7 +303,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	else if (column == colTarget) {
@@ -325,10 +325,10 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
-	return true;
+	return false;
 }
 };
 class RunnerFigure :public Figure {
@@ -390,7 +390,7 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if (skipsFigure == false) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	return false;
@@ -413,14 +413,14 @@ public: bool isValidMove(int rowTarget, int colTarget, std::vector<std::shared_p
 		if ((column + 1) == colTarget || (column - 1) == colTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	else if ((column + 2) == colTarget || (column - 2) == colTarget) {
 		if ((row + 1) == rowTarget || (row - 1) == rowTarget) {
 			int playerT = (*chessBoard[rowTarget])[colTarget]->get_player();
 			char signT = (*chessBoard[rowTarget])[colTarget]->get_Name();
-			if (playerT != currentPlayer && signT != 'K') { return true; }
+			if (playerT != playerNumber) { return true; }
 		}
 	}
 	return false;

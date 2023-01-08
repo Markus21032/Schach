@@ -7,7 +7,6 @@
 #ifndef _Algorithm_
 #define _Algorithm_ 
 
-
 //returns the attacked player
 //0 -> none
 //1 -> player 1
