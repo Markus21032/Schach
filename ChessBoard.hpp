@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <array>
 
 
 #include "ChessFigures.hpp"
@@ -124,6 +125,20 @@ public:
 		chessBoard.clear();
         initBoard();
 		currentPlayer = 1;
+    }
+
+    //Returns a list of all valid moves of a given figure
+    std::vector<std::array<int,2>> getListOfValidMoves(int row, int column){
+        std::vector<std::array<int,2>> movesList;
+        for(int r = 0; r < 8; r++){
+            for(int c = 0; c < 8; c++){
+                if(validateMove(row,column,r,c)){
+                    std::array<int, 2> x = {r, c};
+                    movesList.push_back(x);
+                }
+            }
+        }
+        return movesList;
     }
 
 

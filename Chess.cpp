@@ -117,7 +117,8 @@ int main()
 	bool play = true;
 
 	while (play) {
-		isCheckMate(chessBoard,1);
+		//isCheckMate(chessBoard,1);
+		std::cout << inCheck(chessBoard,1) << std::endl;
 		std::string choice;
 		std::cout << "Player " << currentPlayer << " Type:\n";
 		std::cout << "1 to move a figure\n"
@@ -179,27 +180,52 @@ int main()
 					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
 
 
-					int attackedKing = inCheck(tempChessBoard.getBoard());
-					if (attackedKing != 0) {
+					int inCheckKingPlayer1 = inCheck(tempChessBoard,1);
+					int inCheckKingPlayer2 = inCheck(tempChessBoard,2);
+
+					if (inCheckKingPlayer1 || inCheckKingPlayer2) {
 						std::cout<< std::endl;
-						if (attackedKing == currentPlayer) {//illegal
-							std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
-							std::cout << "Your own kings would be attacked!\n";
-							break;
-						}
-						else if (attackedKing == 3) {//illegal
-							std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
-							std::cout << "Both kings would be attacked!\n";
-							break;
-						}
-						else{//legal
-							std::cout << "The King of " << attackedKing << " gets attacked!\n";
+						if (1 == currentPlayer) {
+							if(inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
+								std::cout << "Both kings would be attacked!\n";
+								break;
+							}
+							else if(inCheckKingPlayer1 && !inCheckKingPlayer2){//illegal
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
+								std::cout << "Your own kings would be attacked!\n";
+								break;
+							}
+							else{
+								std::cout << "The King of Player " << 2 << " gets attacked!\n";
 
-							//move on chessBoard
-							chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
+								//move on chessBoard
+								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
-							//check if mate
-							//bool mate = isCheckMate(chessBoard, attackedKing);
+								//check if mate
+								//bool mate = isCheckMate(chessBoard, attackedKing);
+							}							
+						}
+						else{
+							if(inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
+								std::cout << "Both kings would be attacked!\n";
+								break;
+							}
+							else if(!inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
+								std::cout << "Your own kings would be attacked!\n";
+								break;
+							}
+							else{
+								std::cout << "The King of Player " << 1 << " gets attacked!\n";
+
+								//move on chessBoard
+								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
+
+								//check if mate
+								//bool mate = isCheckMate(chessBoard, attackedKing);
+							}
 						}
 					}
 					else{//move on chessBoard
