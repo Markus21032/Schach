@@ -117,8 +117,6 @@ int main()
 	bool play = true;
 
 	while (play) {
-		//isCheckMate(chessBoard,1);
-		std::cout << inCheck(chessBoard,1) << std::endl;
 		std::string choice;
 		std::cout << "Player " << currentPlayer << " Type:\n";
 		std::cout << "1 to move a figure\n"
@@ -203,7 +201,9 @@ int main()
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
 								//check if mate
-								//bool mate = isCheckMate(chessBoard, attackedKing);
+								if(isCheckMate(chessBoard, 2)){
+									std::cout<<"Player 2 is checkmate"<<std::endl;
+								}
 							}							
 						}
 						else{
@@ -224,7 +224,9 @@ int main()
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
 								//check if mate
-								//bool mate = isCheckMate(chessBoard, attackedKing);
+								if(isCheckMate(chessBoard, 1)){
+									std::cout<<"Player 1 is checkmate"<<std::endl;
+								}
 							}
 						}
 					}

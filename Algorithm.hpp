@@ -56,27 +56,18 @@ bool isCheckMate(ChessBoard chessBoard, int attackedKing) {
 		}
 	}
 	
-	printChess printer;
 
 	//Fall 1: König kann sich selbstständig befreien
 	int possibleMovesForKing [8][2] = {{1,-1}, {1,0}, {1,1}, {0,1}, {-1,1}, {-1,0}, {-1,-1}, {0,-1}};
 
 	for(auto pos: possibleMovesForKing){
 		if(boardCopy.validateMove(kingposition[0], kingposition[1], kingposition[0]+pos[0], kingposition[1]+pos[1])){
-			printer.print(boardCopy);
-			std::cout << "[" << kingposition[0] << ", " << kingposition[1] << "] -> [" << kingposition[0]+pos[0] << ", " << kingposition[1]+pos[1] << "]" << std::endl;
 			//if move is valid, do it and then check if king is still in check
 			auto savedFigure = boardCopy.getFigure(kingposition[0]+pos[0], kingposition[1]+pos[1]);
 
 			boardCopy.moveFigure(kingposition[0], kingposition[1], kingposition[0]+pos[0], kingposition[1]+pos[1]);
 			
-
-			for(auto x: boardCopy.getListOfValidMoves(1,4)){
-				//std::cout<< x[0] << " " << x[1]<< std::endl;
-			}
-
 			if(!inCheck(boardCopy,attackedKing)){ //player is no longer in check
-				printer.print(boardCopy);
 				return false;
 			} else{ //undo move
 				boardCopy.moveFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], kingposition[0], kingposition[1]);
@@ -84,13 +75,76 @@ bool isCheckMate(ChessBoard chessBoard, int attackedKing) {
 			}
 		}
 	}
-	
 
 	//Fall 2: Angreifende Figur kann geschlagen werden
+
+	//alle moves auf könig -> alle moves auf diese figuren
+
+	//search figures, attacking the King
+	std::vector<std::array<int,2>> attackers;
+	for(int row=0;row <8 ; row++){
+		for(int column=0; column <8 ; column++){
+			if(boardCopy.getFigure(row,column)->get_player() != attackedKing){
+				for(auto move: boardCopy.getListOfValidMoves(row,column)){
+					if(kingposition[0] == move[0] && kingposition[1] == move[1]){
+						attackers.push_back({row,column});
+					}
+				}
+			}
+		}
+	}
+
+	//bei mehr als 1 angreifer kann man diese nicht schlagen und auch nicht dazwischen rücken
+	
+	if(attackers.size() == 1){
+		//Figur suchen die Angreifer schlagen kann
+		for(int row=0;row <8 ; row++){
+			for(int column=0; column <8 ; column++){
+				if(boardCopy.getFigure(row,column)->get_player() == attackedKing){
+					for(auto move: boardCopy.getListOfValidMoves(row,column)){						
+						if(attackers[0][0] == move[0] && attackers[0][1] == move[1]){
+							return false;							
+						}
+					}
+				}
+			}
+		}
+	}
+	else{
+		return true;
+	}
+
+
+
 	//Fall 3: Figur kann sich zwischen Angreifer und König stellen
+	//Fall 3 schließt theoretisch Fall 2 mit aus
+	auto attacker = attackers[0];
+	if(boardCopy.getFigure(attacker[0],attacker[1])->get_Name() == 'S'){
+		return true;
+	}
+	else{
+		for(int row=0;row <8 ; row++){
+			for(int column=0; column <8 ; column++){
+				if(boardCopy.getFigure(row,column)->get_player() == attackedKing){
+					for(auto move: boardCopy.getListOfValidMoves(row,column)){
+					
+					auto savedFigure = boardCopy.getFigure(move[0],move[1]);
 
+					boardCopy.moveFigure(row, column, move[0],move[1]);
 
-	std::cout <<"true" <<std::endl;
+					if(inCheck(boardCopy,attackedKing)){
+						boardCopy.moveFigure(move[0],move[1], row, column);
+						boardCopy.setFigure(move[0],move[1], savedFigure);
+					}
+					else{
+						return false;
+						}
+					}
+				}
+			}
+		}
+	}
+	
 	return true;
 };
 
