@@ -7,21 +7,16 @@
  
 class printChess {
 public:
-	void print(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>>& c) {
-		std::cout << "===============================================\n";
-		std::cout << "||-|  A |  B |  C |  D |  E |  F |  G |  H |-||\n";
-		std::cout << "||=|=======================================|=||\n";
+	void print(ChessBoard c) {
+		std::cout << "=======================================\n";
+		std::cout << "||-| A | B | C | D | E | F | G | H |-||\n";
+		std::cout << "||=|===============================|=||\n";
 		for (int i = 0; i < 8; i++) {
 			std::cout << "||" << 8 - i << "| ";
 			for (int j = 0; j < 8; j++) {
-				if ((*(*c[i])[j]).get_player() != 0) {
-					std::cout << (*(*c[i])[j]).get_2print();
-				}
-				else{
-					std::cout << "  ";
-				}
 
-
+				std::cout << c.getFigure(i,j)->get_2print();
+				
 				if (j < 7) {
 					std::cout << " | ";
 				}
@@ -32,13 +27,13 @@ public:
 			std::cout << 8 - i << "||\n";
 
 			if (i < 7) {
-				std::cout << "||-|----+----+----+----+----+----+----+----|-||\n";
+				std::cout << "||-|---+---+---+---+---+---+---+---|-||\n";
 			}
 		}
-		std::cout << "||=|=======================================|=||\n";
-		std::cout << "||-|  A |  B |  C |  D |  E |  F |  G |  H |-||\n";
-		std::cout << "===============================================\n";
+		std::cout << "||=|===============================|=||\n";
+		std::cout << "||-| A | B | C | D | E | F | G | H |-||\n";
+		std::cout << "=======================================\n";
 	}
 };
 
-#endif _PRINTCHESS_
+#endif //_PRINTCHESS_
