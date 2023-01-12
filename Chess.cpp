@@ -9,7 +9,6 @@ std::string defaultSaveFileName = "Chess_Save";
 std::string saveFileName = "d";
 int currentPlayer = 1;
 
-#include "InitAndCopy.hpp"
 #include "ChessFigures.hpp"
 #include "ChessBoard.hpp"
 #include "PrintChess.hpp"
@@ -141,20 +140,20 @@ int main()
 
 	while (play) {
 		std::string choice;
-		std::cout << "Player " << currentPlayer << " Type:\n";
-		std::cout << "1 to move a figure\n"
-			<< "2 to print the chessboard\n"
-			<< "S to save the game\n"
-			<< "L to load game\n"
-			<< "R to reset game\n"
-			<< "E to end\n";
+		std::cout << "Player " << currentPlayer << " Type:"<< std::endl;
+		std::cout << "1 to move a figure"<< std::endl
+			<< "2 to print the chessboard"<< std::endl
+			<< "S to save the game"<< std::endl
+			<< "L to load game"<< std::endl
+			<< "R to reset game"<< std::endl
+			<< "E to end"<< std::endl;
 		std::cin >> choice;
-		std::cout << "\n";
+		std::cout << std::endl;
 		if (choice == "1") {
 			while (true) {
 				//Select figure
 				std::string figureSelected;
-				std::cout << "To choose the figure please enter the position of it:\n";
+				std::cout << "To choose the figure please enter the position of it:"<< std::endl;
 				std::cin >> figureSelected;
 				auto input = checkAndGetSeletedPosition(figureSelected);
 				int lineSelect;
@@ -168,13 +167,13 @@ int main()
 					break;
 				}
 				if (!(chessBoard.getFigure(lineSelect,columnSelect)->get_player() == currentPlayer)) {
-					std::cout << "You can only select figures of player " << currentPlayer << "\n";
+					std::cout << "You can only select figures of player " << currentPlayer << std::endl;
 					break;
 				}
 				//Select target position
 				std::string targetPosition;				
 				
-				std::cout << "Please enter a target position:\n";
+				std::cout << "Please enter a target position:"<< std::endl;
 				std::cin >> targetPosition;
 
 				input = checkAndGetSeletedPosition(targetPosition);
@@ -191,7 +190,7 @@ int main()
 
 				//Check if figure can move to target position
 				if (!(chessBoard.validateMove(lineSelect,columnSelect, lineTarget, columnTarget))) {
-					std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
+					std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
 					break;
 				}
 				else {
@@ -201,7 +200,7 @@ int main()
 					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
 
 					if(chessBoard.isStalemate()){
-						std::cout << "Stalemate!" << std::endl;
+						std::cout << std::endl << "Stalemate!" << std::endl;
 					}
 
 					int inCheckKingPlayer1 = tempChessBoard.inCheck(1);
@@ -211,17 +210,17 @@ int main()
 						std::cout<< std::endl;
 						if (1 == currentPlayer) {
 							if(inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
-								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
-								std::cout << "Both kings would be attacked!\n";
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
+								std::cout << "Both kings would be attacked!" << std::endl;
 								break;
 							}
 							else if(inCheckKingPlayer1 && !inCheckKingPlayer2){//illegal
-								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
-								std::cout << "Your own kings would be attacked!\n";
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
+								std::cout << "Your own kings would be attacked!"<< std::endl;
 								break;
 							}
 							else{
-								std::cout << "The King of Player " << 2 << " gets attacked!\n";
+								std::cout << "The King of Player " << 2 << " gets attacked!"<< std::endl;
 
 								//move on chessBoard
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
@@ -235,17 +234,17 @@ int main()
 						}
 						else{
 							if(inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
-								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
-								std::cout << "Both kings would be attacked!\n";
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
+								std::cout << "Both kings would be attacked!"<< std::endl;
 								break;
 							}
 							else if(!inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
-								std::cout << "You can not move " << figureSelected << " to " << targetPosition << "\n";
-								std::cout << "Your own kings would be attacked!\n";
+								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
+								std::cout << "Your own kings would be attacked!"<< std::endl;
 								break;
 							}
 							else{
-								std::cout << "The King of Player " << 1 << " gets attacked!\n";
+								std::cout << "The King of Player " << 1 << " gets attacked!"<< std::endl;
 
 								//move on chessBoard
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
@@ -289,12 +288,12 @@ int main()
 			bool gameIsSelected = false;
 			std::string selectedGame = "";
 			std::vector<std::string> gamesToLoad;
-			std::cout << "These games can continue:\n";
+			std::cout << "These games can continue:"<< std::endl;
 			 for (const auto & entry : std::filesystem::directory_iterator("StartedGames")){
 				gamesToLoad.push_back(entry.path().string().substr(13, entry.path().string().length() - 1)); //just show the raw file names (raw filename would be sth. like "StartedGames\\Chess_Save.txt" )
 				std::cout << entry.path().string().substr(13, entry.path().string().length() - 1) << std::endl;
 			 }
-			std::cout << "Please select a game with which you want to continue:\n";	
+			std::cout << "Please select a game with which you want to continue:"<< std::endl;	
 			//waits till you selected a game which you want to continue
 			while(!gameIsSelected){				
 				std::cin >> selectedGame;
@@ -305,7 +304,7 @@ int main()
 						gameIsSelected = true;
 						saveFileName = selectedGame;
 				}else {
-					std::cout << "There is no game with the entered name. Please try again.\n";
+					std::cout << "There is no game with the entered name. Please try again."<< std::endl;
 				}				
 			}
 			std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoardVector;
@@ -321,8 +320,8 @@ int main()
 			saveAndLoad.quicksave(chessBoard.getBoard());
 		}
 		else if (choice == "E") { play = false; }
-		else { std::cout << "Wrong input, try again.\n"; }
-		std::cout << "\n";
+		else { std::cout << "Wrong input, try again."<< std::endl; }
+		std::cout<< std::endl;
 	}
 	return 0;
 }

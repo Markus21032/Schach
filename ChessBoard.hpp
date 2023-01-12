@@ -245,7 +245,7 @@ bool isStalemate(){
                 }
             }
         }
-}
+	}
     return true;
 
 }
