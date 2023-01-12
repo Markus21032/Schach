@@ -87,6 +87,8 @@ private:
             }
         }
 
+        
+
 
 public:
     ChessBoard(){
@@ -94,6 +96,66 @@ public:
     }
 
     std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> getBoard(){return chessBoard;}
+
+    ChessBoard copyBoard(){
+	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > copy;
+	for (int i = 0; i < 8; i++) {
+		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
+		for (int j = 0; j < 8; j++) {
+			int player = getFigure(i,j)->get_player();
+
+			if(getFigure(i,j)->get_Name() == '0'){
+				std::shared_ptr<Figure> fig = std::make_shared< NoneFigure>();
+				fig->init_figure();
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+			else if(getFigure(i,j)->get_Name() == 'B'){std::shared_ptr<Figure> fig = std::make_shared< PawnFigure>();
+				fig->init_figure();
+				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+			else if(getFigure(i,j)->get_Name() == 'K'){std::shared_ptr<Figure> fig = std::make_shared< KingFigure>();
+				fig->init_figure();
+				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+			else if(getFigure(i,j)->get_Name() == 'Q'){std::shared_ptr<Figure> fig = std::make_shared< QueenFigure>();
+				fig->init_figure();
+				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+			else if(getFigure(i,j)->get_Name() == 'T'){std::shared_ptr<Figure> fig = std::make_shared< TowerFigure>();
+				fig->init_figure();
+				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+			else if(getFigure(i,j)->get_Name() == 'L'){std::shared_ptr<Figure> fig = std::make_shared< RunnerFigure>();
+				fig->init_figure();
+				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+			else if(getFigure(i,j)->get_Name() == 'S'){std::shared_ptr<Figure> fig = std::make_shared< JumperFigure>();
+				fig->init_figure();
+				fig->assign_to_player(player);
+				fig->setCoordinates(i,j);
+				vec->push_back(fig);
+			}
+		}
+		
+		copy.push_back(vec);
+	}
+
+	ChessBoard copyBoard;
+	copyBoard.overrideBoard(copy);
+	return copyBoard;
+}
+
 
     void moveFigure(int fromRow, int fromColumn, int toRow, int toColumn){
         //move on chessBoard
@@ -141,9 +203,158 @@ public:
         return movesList;
     }
 
+    bool inCheck(int playerNumber) {
+	int kingpos[2];
+	for (int row = 0; row < 8; row++) {
+		for (int column = 0; column < 8; column++) {
+			if (getFigure(row,column)->get_Name() == 'K' && getFigure(row,column)->get_player() == playerNumber) {
+				kingpos[0] = row;
+				kingpos[1] = column;
+				break;
+			}
+		}
+	}
+
+
+	for (int row = 0; row < 8; row++) {
+		for (int column = 0; column < 8; column++) {
+			if(getFigure(row,column)->get_player() != playerNumber){
+				for(auto move: getListOfValidMoves(row,column)){
+					if(move[0]==kingpos[0] && move[1] == kingpos[1]){
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;			
+}
+
+bool isStalemate(){
+    //1. Get all possible moves
+    //2. Make all possible moves and check if they are legal (inCheck())
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if(getFigure(i, j)->get_player() == 1){
+                for(auto move: getListOfValidMoves(i, j)){
+                    ChessBoard boardCopy = copyBoard();
+                    boardCopy.moveFigure(i, j, move[0], move[1]);
+                    if(!boardCopy.inCheck(1)){
+                        return false;
+                    }
+                }
+            }
+        }
+}
+    return true;
+
+}
+
+
+bool isCheckMate(int attackedKing) {
+	ChessBoard boardCopy;
+	boardCopy = copyBoard();
+	bool mate = false;
+	int kingposition[2];
+
+	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			if(boardCopy.getFigure(i, j)->get_Name() == 'K' && (boardCopy.getFigure(i, j)->get_player() == attackedKing)){
+				kingposition[0] = i; //row
+				kingposition[1] = j; //column
+				break;
+			}
+		}
+	}
+	
+
+	//Fall 1: König kann sich selbstständig befreien
+
+	for(auto pos: getListOfValidMoves(kingposition[0], kingposition[1])){
+        //if move is valid, do it and then check if king is still in check
+        auto savedFigure = boardCopy.getFigure(kingposition[0]+pos[0], kingposition[1]+pos[1]);
+
+        boardCopy.moveFigure(kingposition[0], kingposition[1], kingposition[0]+pos[0], kingposition[1]+pos[1]);
+        
+        if(!boardCopy.inCheck(attackedKing)){ //player is no longer in check
+            return false;
+        } else{ //undo move
+            boardCopy.moveFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], kingposition[0], kingposition[1]);
+            boardCopy.setFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], savedFigure);
+        }
+    }
+
+	//Fall 2: Angreifende Figur kann geschlagen werden
+
+	//alle moves auf könig -> alle moves auf diese figuren
+
+	//search figures, attacking the King
+	std::vector<std::array<int,2>> attackers;
+	for(int row=0;row <8 ; row++){
+		for(int column=0; column <8 ; column++){
+			if(boardCopy.getFigure(row,column)->get_player() != attackedKing){
+				for(auto move: boardCopy.getListOfValidMoves(row,column)){
+					if(kingposition[0] == move[0] && kingposition[1] == move[1]){
+						attackers.push_back({row,column});
+					}
+				}
+			}
+		}
+	}
+
+	//bei mehr als 1 angreifer kann man diese nicht schlagen und auch nicht dazwischen rücken
+	
+	if(attackers.size() == 1){
+		//Figur suchen die Angreifer schlagen kann
+		for(int row=0;row <8 ; row++){
+			for(int column=0; column <8 ; column++){
+				if(boardCopy.getFigure(row,column)->get_player() == attackedKing){
+					for(auto move: boardCopy.getListOfValidMoves(row,column)){						
+						if(attackers[0][0] == move[0] && attackers[0][1] == move[1]){
+							return false;							
+						}
+					}
+				}
+			}
+		}
+	}
+	else{
+		return true;
+	}
 
 
 
+	//Fall 3: Figur kann sich zwischen Angreifer und König stellen
+	//Fall 3 schließt theoretisch Fall 2 mit aus
+	auto attacker = attackers[0];
+	if(boardCopy.getFigure(attacker[0],attacker[1])->get_Name() == 'S'){
+		return true;
+	}
+	else{
+		for(int row=0;row <8 ; row++){
+			for(int column=0; column <8 ; column++){
+				if(boardCopy.getFigure(row,column)->get_player() == attackedKing){
+					for(auto move: boardCopy.getListOfValidMoves(row,column)){
+					
+					auto savedFigure = boardCopy.getFigure(move[0],move[1]);
+
+					boardCopy.moveFigure(row, column, move[0],move[1]);
+
+					if(boardCopy.inCheck(attackedKing)){
+						boardCopy.moveFigure(move[0],move[1], row, column);
+						boardCopy.setFigure(move[0],move[1], savedFigure);
+					}
+					else{
+						return false;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return true;
+}
 };
 
 #endif //_CHESSBOARD_

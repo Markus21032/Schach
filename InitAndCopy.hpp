@@ -2,6 +2,7 @@
 #include <string>
 #include <memory>
 #include "ChessFigures.hpp"
+#include "ChessBoard.hpp"
 
 #ifndef _INITANDCOPY_
 #define _INITANDCOPY_ 

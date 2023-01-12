@@ -9,11 +9,12 @@ std::string defaultSaveFileName = "Chess_Save";
 std::string saveFileName = "d";
 int currentPlayer = 1;
 
+#include "InitAndCopy.hpp"
 #include "ChessFigures.hpp"
 #include "ChessBoard.hpp"
 #include "PrintChess.hpp"
 #include "SaveAndLoadChess.hpp"
-#include "Algorithm.hpp"
+
 
 
  
@@ -106,6 +107,28 @@ std::shared_ptr<std::vector<int>> checkAndGetSeletedPosition(std::string input)
 	return selectedPosition;
 }
 
+void endGame(ChessBoard &chessboard, bool &play){
+	while(true){
+		std::cout << "Do you want to play again? (y/n)" << std::endl;
+		std::string choice;
+		std::cin >> choice;
+		if(choice == "y"){
+			chessboard.resetBoard();
+			//Spieler wird nach dem Spielzug gewechselt und steht beim start des neuen Spiels dann auch 1
+			currentPlayer = 2; 
+			return;
+		}
+		else if (choice == "n")
+		{
+			play = false;
+			return;
+		}
+		else{
+			std::cout << "illegal input" << std::endl;
+		}
+	}
+}
+
 int main()
 {
 	std::atexit(exit_handler);
@@ -174,12 +197,15 @@ int main()
 				else {
 					//move figure on temp board
 					ChessBoard tempChessBoard;
-					tempChessBoard = copyBoard(chessBoard);
+					tempChessBoard = chessBoard.copyBoard();
 					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
 
+					if(chessBoard.isStalemate()){
+						std::cout << "Stalemate!" << std::endl;
+					}
 
-					int inCheckKingPlayer1 = inCheck(tempChessBoard,1);
-					int inCheckKingPlayer2 = inCheck(tempChessBoard,2);
+					int inCheckKingPlayer1 = tempChessBoard.inCheck(1);
+					int inCheckKingPlayer2 = tempChessBoard.inCheck(2);
 
 					if (inCheckKingPlayer1 || inCheckKingPlayer2) {
 						std::cout<< std::endl;
@@ -201,8 +227,9 @@ int main()
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
 								//check if mate
-								if(isCheckMate(chessBoard, 2)){
+								if(chessBoard.isCheckMate(2)){
 									std::cout<<"Player 2 is checkmate"<<std::endl;
+									endGame(chessBoard, play);
 								}
 							}							
 						}
@@ -224,8 +251,9 @@ int main()
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
 								//check if mate
-								if(isCheckMate(chessBoard, 1)){
+								if(chessBoard.isCheckMate(1)){
 									std::cout<<"Player 1 is checkmate"<<std::endl;
+									endGame(chessBoard, play);
 								}
 							}
 						}
@@ -271,7 +299,9 @@ int main()
 			while(!gameIsSelected){				
 				std::cin >> selectedGame;
 				if (std::find(gamesToLoad.begin(), gamesToLoad.end(), selectedGame) != gamesToLoad.end()){
+
 						std::cout << "Game was found!" << std::endl;
+						printer.print(chessBoard);
 						gameIsSelected = true;
 						saveFileName = selectedGame;
 				}else {
@@ -296,3 +326,5 @@ int main()
 	}
 	return 0;
 }
+
+//https://www.chess.com/terms/draw-chess
