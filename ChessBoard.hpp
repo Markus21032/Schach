@@ -310,18 +310,6 @@ bool insufficientMaterial(){
 	{
 		return true;
 	}
-	
-
-	std::cout << "Player 1" << std::endl;
-	for(std::pair p: player1){
-		std::cout << p.first << ": " << p.second << std::endl;
-	}
-
-	std::cout << std::endl;
-	std::cout << "Player 2" << std::endl;
-	for(std::pair p: player2){
-		std::cout << p.first << ": " << p.second << std::endl;
-	}
 
 	//King and bishop vs. king and bishop of the same color as the opponent's bishop
 
@@ -348,17 +336,17 @@ bool isCheckMate(int attackedKing) {
 
 	//Fall 1: König kann sich selbstständig befreien
 
-	for(auto pos: getListOfValidMoves(kingposition[0], kingposition[1])){
+	for(auto move: getListOfValidMoves(kingposition[0], kingposition[1])){
         //if move is valid, do it and then check if king is still in check
-        auto savedFigure = boardCopy.getFigure(kingposition[0]+pos[0], kingposition[1]+pos[1]);
+        auto savedFigure = boardCopy.getFigure(move[0], move[1]);
 
-        boardCopy.moveFigure(kingposition[0], kingposition[1], kingposition[0]+pos[0], kingposition[1]+pos[1]);
+        boardCopy.moveFigure(kingposition[0], kingposition[1], move[0], move[1]);
         
         if(!boardCopy.inCheck(attackedKing)){ //player is no longer in check
             return false;
         } else{ //undo move
-            boardCopy.moveFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], kingposition[0], kingposition[1]);
-            boardCopy.setFigure(kingposition[0]+pos[0], kingposition[1]+pos[1], savedFigure);
+            boardCopy.moveFigure(move[0], move[1], kingposition[0], kingposition[1]);
+            boardCopy.setFigure(move[0], move[1], savedFigure);
         }
     }
 

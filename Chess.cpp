@@ -111,14 +111,12 @@ void endGame(ChessBoard &chessboard, bool &play){
 		std::cin >> choice;
 		if(choice == "y"){
 			chessboard.resetBoard();
-			//Spieler wird nach dem Spielzug gewechselt und steht beim start des neuen Spiels dann auch 1
-			currentPlayer = 2; 
+			currentPlayer = 1; 
 			return;
 		}
 		else if (choice == "n")
 		{
-			play = false;
-			return;
+			exit(0);
 		}
 		else{
 			std::cout << "illegal input" << std::endl;
@@ -198,11 +196,6 @@ int main()
 					tempChessBoard = chessBoard.copyBoard();
 					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
 
-					if(chessBoard.isStalemate() || chessBoard.insufficientMaterial()){
-						std::cout << std::endl << "Draw!" << std::endl;
-						endGame(chessBoard, play);
-						break;
-					}
 
 					int inCheckKingPlayer1 = tempChessBoard.inCheck(1);
 					int inCheckKingPlayer2 = tempChessBoard.inCheck(2);
@@ -230,6 +223,8 @@ int main()
 								if(chessBoard.isCheckMate(2)){
 									std::cout<<"Player 2 is checkmate"<<std::endl;
 									endGame(chessBoard, play);
+									//Player will be switched after move
+									currentPlayer = 2;
 								}
 							}							
 						}
@@ -254,6 +249,8 @@ int main()
 								if(chessBoard.isCheckMate(1)){
 									std::cout<<"Player 1 is checkmate"<<std::endl;
 									endGame(chessBoard, play);
+									//Player will be switched after move
+									currentPlayer = 2;
 								}
 							}
 						}
@@ -261,6 +258,13 @@ int main()
 					else{//move on chessBoard
 						chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 					}		
+
+					
+					if(chessBoard.isStalemate() || chessBoard.insufficientMaterial()){
+						std::cout << std::endl << "Draw!" << std::endl;
+						endGame(chessBoard, play);
+						break;
+					}
 
 					if (currentPlayer == 1) { currentPlayer = 2; }
 					else { currentPlayer = 1; }
@@ -294,26 +298,51 @@ int main()
 				gamesToLoad.push_back(entry.path().string().substr(13, entry.path().string().length() - 1)); //just show the raw file names (raw filename would be sth. like "StartedGames\\Chess_Save.txt" )
 				std::cout << entry.path().string().substr(13, entry.path().string().length() - 1) << std::endl;
 			 }
-			std::cout << "Please select a game with which you want to continue:"<< std::endl;	
+			std::cout << "Please select a game with which you want to continue or enter q to quit:"<< std::endl;	
 			//waits till you selected a game which you want to continue
 			while(!gameIsSelected){				
 				std::cin >> selectedGame;
 				if (std::find(gamesToLoad.begin(), gamesToLoad.end(), selectedGame) != gamesToLoad.end()){
-
-						std::cout << "Game was found!" << std::endl;
 						gameIsSelected = true;
 						saveFileName = selectedGame;
+						std::cout << "File found!" << std::endl;
+				}
+				else if(selectedGame == "q"){
+					gameIsSelected = true;
 				}else {
 					std::cout << "There is no game with the entered name. Please try again."<< std::endl;
 				}				
 			}
-			std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoardVector;
-			currentPlayer = saveAndLoad.load(chessBoardVector, selectedGame);
-			chessBoard.overrideBoard(chessBoardVector);
-			if(currentPlayer != 1 && currentPlayer != 2){
-				chessBoard.resetBoard();
+			if(selectedGame != "q"){
+				std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoardVector;
+				currentPlayer = saveAndLoad.load(chessBoardVector, selectedGame);
+				chessBoard.overrideBoard(chessBoardVector);
+				if(currentPlayer != 1 && currentPlayer != 2){
+					std::cout << "Bad file" << std::endl;
+					chessBoard.resetBoard();
+				}
+				printer.print(chessBoard);
+				saveAndLoad.quicksave(chessBoard.getBoard());
+
+				
+
+				if(chessBoard.inCheck(1)){
+					if(chessBoard.isCheckMate(1)){
+						std::cout << "Player 1 is checkmate"<< std::endl;
+						endGame(chessBoard, play);
+					}
+				}
+				else if(chessBoard.inCheck(2)){
+					if(chessBoard.isCheckMate(2)){
+						std::cout << "Player 2 is checkmate"<< std::endl;
+						endGame(chessBoard, play);
+					}
+				}
+				else if(chessBoard.isStalemate() || chessBoard.insufficientMaterial()){
+					std::cout << "Draw!" << std::endl;
+					endGame(chessBoard, play);
+				}
 			}
-			saveAndLoad.quicksave(chessBoard.getBoard());
 		}
 		else if (choice == "R") {
 			chessBoard.resetBoard();
