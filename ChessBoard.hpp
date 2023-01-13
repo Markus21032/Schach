@@ -13,10 +13,11 @@
 
 class ChessBoard{
 private: 
+	//2d vector filled with Figure Objects representing the chess board
     std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard;
 
 
-    //initialisizes the chess board
+    	/*initialisizes the chess board, is only called by the contructor*/
         void initBoard() {
 			chessBoard.clear();
             for (int i = 0; i < 8; i++) {
@@ -89,17 +90,18 @@ private:
         }
 
         
-
-
 public:
+	/*constructor*/
     ChessBoard(){
         initBoard();
     }
 
+	/*returns the 2d vector representing the chess board*/
     std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> getBoard(){return chessBoard;}
 
+	/*returns a fully coppied 2d vector of the chess board*/
     ChessBoard copyBoard(){
-	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure> > > > copy;
+	std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> copy;
 	for (int i = 0; i < 8; i++) {
 		std::shared_ptr<std::vector<std::shared_ptr<Figure>>> vec = std::make_shared<std::vector<std::shared_ptr<Figure>>>();
 		for (int j = 0; j < 8; j++) {
@@ -157,7 +159,8 @@ public:
 	return copyBoard;
 }
 
-
+	/*move a figure on a given position to a new position and replaced the old position with a NoneFigure Object, 
+	check if the move is legal has to be done seperately */
     void moveFigure(int fromRow, int fromColumn, int toRow, int toColumn){
         //move on chessBoard
 		(*chessBoard[toRow])[toColumn] = (*chessBoard[fromRow])[fromColumn];
@@ -168,29 +171,34 @@ public:
 		(*chessBoard[fromRow])[fromColumn] = f;
     }
 
+	/*sets a given figure object to a given position*/
     void setFigure(int row, int column, std::shared_ptr<Figure> figure){
         (*chessBoard[row])[column] = figure;
     }
 
+	/*returns the Figure Object on a given position*/
     std::shared_ptr<Figure> getFigure(int row, int column){
         return (*chessBoard[row])[column];
     }
 
+	/*checks whether a move of a Figure is valid*/
     bool validateMove(int fromRow, int fromColumn, int toRow, int toColumn){
         return getFigure(fromRow,fromColumn)->isValidMove(toRow,toColumn,chessBoard);
     }
 
+	/*overrides the current chess board 2d vector with a given one*/
     void overrideBoard(std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> newBoard){
         chessBoard = newBoard;
     }
 
+	/*resets the board to default*/
     void resetBoard(){
 		chessBoard.clear();
         initBoard();
 		currentPlayer = 1;
     }
 
-    //Returns a list of all valid moves of a given figure
+    /*Returns a list of all valid moves for a figure on a given position*/
     std::vector<std::array<int,2>> getListOfValidMoves(int row, int column){
         std::vector<std::array<int,2>> movesList;
         for(int r = 0; r < 8; r++){
@@ -204,6 +212,7 @@ public:
         return movesList;
     }
 
+	/*checks if the king of the given player is in check*/
     bool inCheck(int playerNumber) {
 	int kingpos[2];
 	for (int row = 0; row < 8; row++) {
@@ -215,7 +224,6 @@ public:
 			}
 		}
 	}
-
 
 	for (int row = 0; row < 8; row++) {
 		for (int column = 0; column < 8; column++) {
@@ -231,24 +239,38 @@ public:
 	return false;			
 }
 
+/*checks if the chess board is in a stalemate position, this occurs if one player can't execute a legal move*/
 bool isStalemate(){
     //1. Get all possible moves
-    //2. Make all possible moves and check if they are legal (inCheck())
+    //2. Make all possible moves on a copied board and check if they are legal (inCheck())
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
+			//check for player1
             if(getFigure(i, j)->get_player() == 1){
                 for(auto move: getListOfValidMoves(i, j)){
                     ChessBoard boardCopy = copyBoard();
                     boardCopy.moveFigure(i, j, move[0], move[1]);
-                    if(!boardCopy.inCheck(1)){
+					//if any single position the player could take doesn't lead to the player being in check, he has at least one legal move left
+					//and therefore is not in a stalemate position
+                    if(!boardCopy.inCheck(1)){ 
                         return false;
                     }
                 }
             }
+			else if (getFigure(i, j)->get_player() == 2){
+				for(auto move: getListOfValidMoves(i, j)){
+                    ChessBoard boardCopy = copyBoard();
+                    boardCopy.moveFigure(i, j, move[0], move[1]);
+					//if any single position the player could take doesn't lead to the player being in check, he has at least one legal move left
+					//and therefore is not in a stalemate position
+                    if(!boardCopy.inCheck(2)){ 
+                        return false;
+                    }
+                }
+			}
         }
 	}
     return true;
-
 }
 
 /*
@@ -316,6 +338,7 @@ bool insufficientMaterial(){
 	return false;
 }
 
+/*checks whether a given player is in checkmate position and therefore lost the game*/
 
 bool isCheckMate(int attackedKing) {
 	ChessBoard boardCopy;
@@ -323,6 +346,7 @@ bool isCheckMate(int attackedKing) {
 	bool mate = false;
 	int kingposition[2];
 
+	//determine kings position
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			if(boardCopy.getFigure(i, j)->get_Name() == 'K' && (boardCopy.getFigure(i, j)->get_player() == attackedKing)){
@@ -334,8 +358,7 @@ bool isCheckMate(int attackedKing) {
 	}
 	
 
-	//Fall 1: König kann sich selbstständig befreien
-
+	//Case 1: King can ecape the checkmate himself by simply moving to another position
 	for(auto move: getListOfValidMoves(kingposition[0], kingposition[1])){
         //if move is valid, do it and then check if king is still in check
         auto savedFigure = boardCopy.getFigure(move[0], move[1]);
@@ -350,9 +373,7 @@ bool isCheckMate(int attackedKing) {
         }
     }
 
-	//Fall 2: Angreifende Figur kann geschlagen werden
-
-	//alle moves auf könig -> alle moves auf diese figuren
+	//Case 2: attacking figure of the opponent can be kicked by another figure of the given player
 
 	//search figures, attacking the King
 	std::vector<std::array<int,2>> attackers;
@@ -368,10 +389,9 @@ bool isCheckMate(int attackedKing) {
 		}
 	}
 
-	//bei mehr als 1 angreifer kann man diese nicht schlagen und auch nicht dazwischen rücken
 	
 	if(attackers.size() == 1){
-		//Figur suchen die Angreifer schlagen kann
+		//Search for a Figure that can kick the attacker
 		for(int row=0;row <8 ; row++){
 			for(int column=0; column <8 ; column++){
 				if(boardCopy.getFigure(row,column)->get_player() == attackedKing){
@@ -384,14 +404,14 @@ bool isCheckMate(int attackedKing) {
 			}
 		}
 	}
+	//if there is more than one opposing figure attacking the king they can't all be defended and the loss is inevitable
 	else{
 		return true;
 	}
 
-
-
-	//Fall 3: Figur kann sich zwischen Angreifer und König stellen
-	//Fall 3 schließt theoretisch Fall 2 mit aus
+	//Case 3: A Figure can "sacrifice" itself by moving between it's king and the attacking figure
+	//note: our check for case 3 theoretically includes the check for case 2
+	
 	auto attacker = attackers[0];
 	if(boardCopy.getFigure(attacker[0],attacker[1])->get_Name() == 'S'){
 		return true;

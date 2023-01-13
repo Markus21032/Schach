@@ -40,6 +40,11 @@ void exit_handler(){
 	}
 }
 
+/*
+Checks if given user input is legal and gives back a vector with selected row and column.
+For an invalid input the function returns a nullptr
+*/
+
 std::shared_ptr<std::vector<int>> checkAndGetSeletedPosition(std::string input)
 {
 	//check column
@@ -83,27 +88,30 @@ std::shared_ptr<std::vector<int>> checkAndGetSeletedPosition(std::string input)
 	}
 
 	//check row 
-	int lineSelect = 0;
+	int rowSelect = 0;
 	try
 	{
-		lineSelect = 8 - std::stoi(input.substr(1, 1));
+		rowSelect = 8 - std::stoi(input.substr(1, 1));
 	}
 	catch (std::invalid_argument)
 	{
 		return nullptr;
 	}
 
-	if (lineSelect < 0 || lineSelect > 7)
+	if (rowSelect < 0 || rowSelect > 7)
 	{
 		return nullptr;
 	}
 
 	auto selectedPosition = std::make_shared<std::vector<int>>();
-	(*selectedPosition).push_back(lineSelect);
+	(*selectedPosition).push_back(rowSelect);
 	(*selectedPosition).push_back(columnSelect);
 	return selectedPosition;
 }
 
+/*
+is called after the game has ended (draw or checkmate) and lets the user decide whether he wants to play again
+*/
 void endGame(ChessBoard &chessboard, bool &play){
 	while(true){
 		std::cout << "Do you want to play again? (y/n)" << std::endl;
@@ -116,7 +124,7 @@ void endGame(ChessBoard &chessboard, bool &play){
 		}
 		else if (choice == "n")
 		{
-			exit(0);
+			exit(0); //end program
 		}
 		else{
 			std::cout << "illegal input" << std::endl;
@@ -134,8 +142,7 @@ int main()
 	printer.print(chessBoard);
 	bool play = true;
 
-	while (play) {
-		chessBoard.insufficientMaterial();
+	while (play) { //game loop
 		std::string choice;
 		std::cout << "Player " << currentPlayer << " Type:"<< std::endl;
 		std::cout << "1 to move a figure"<< std::endl
@@ -155,7 +162,7 @@ int main()
 				auto input = checkAndGetSeletedPosition(figureSelected);
 				int lineSelect;
 				int columnSelect;
-				if(input != nullptr){
+				if(input != nullptr){ //if user input was illegal
 					lineSelect = (*input)[0];
 					columnSelect = (*input)[1];
 				}
@@ -163,7 +170,7 @@ int main()
 					std::cout << "Wrong Input!";
 					break;
 				}
-				if (!(chessBoard.getFigure(lineSelect,columnSelect)->get_player() == currentPlayer)) {
+				if (!(chessBoard.getFigure(lineSelect,columnSelect)->get_player() == currentPlayer)) { //if a figure of the other player is selected
 					std::cout << "You can only select figures of player " << currentPlayer << std::endl;
 					break;
 				}
@@ -176,7 +183,7 @@ int main()
 				input = checkAndGetSeletedPosition(targetPosition);
 				int lineTarget;
 				int columnTarget;
-				if(input != nullptr){
+				if(input != nullptr){ //if user input was illegal
 					lineTarget = (*input)[0];
 					columnTarget = (*input)[1];
 				}
@@ -186,40 +193,40 @@ int main()
 				}
 
 				//Check if figure can move to target position
-				if (!(chessBoard.validateMove(lineSelect,columnSelect, lineTarget, columnTarget))) {
+				if (!(chessBoard.validateMove(lineSelect, columnSelect, lineTarget, columnTarget))) {
 					std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
 					break;
 				}
 				else {
-					//move figure on temp board
+					//move figure on copied temp board to use the inCheck() function to determine whether the move is legal without 
+					//chaning the play board
 					ChessBoard tempChessBoard;
 					tempChessBoard = chessBoard.copyBoard();
-					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
-
+					tempChessBoard.moveFigure(lineSelect, columnSelect, lineTarget, columnTarget);					
 
 					int inCheckKingPlayer1 = tempChessBoard.inCheck(1);
 					int inCheckKingPlayer2 = tempChessBoard.inCheck(2);
 
-					if (inCheckKingPlayer1 || inCheckKingPlayer2) {
+					if (inCheckKingPlayer1 || inCheckKingPlayer2) { //if least one player is in check
 						std::cout<< std::endl;
 						if (1 == currentPlayer) {
-							if(inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
+							if(inCheckKingPlayer1 && inCheckKingPlayer2){ //illegal
 								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
 								std::cout << "Both kings would be attacked!" << std::endl;
 								break;
 							}
-							else if(inCheckKingPlayer1 && !inCheckKingPlayer2){//illegal
+							else if(inCheckKingPlayer1 && !inCheckKingPlayer2){ //illegal
 								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
 								std::cout << "Your own kings would be attacked!"<< std::endl;
 								break;
 							}
-							else{
+							else{ //move of figure is legal and sets the opponent king in check, so do the move on the play board
 								std::cout << "The King of Player " << 2 << " gets attacked!"<< std::endl;
 
 								//move on chessBoard
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
-								//check if mate
+								//check if the move leads to checkmate
 								if(chessBoard.isCheckMate(2)){
 									std::cout<<"Player 2 is checkmate"<<std::endl;
 									endGame(chessBoard, play);
@@ -229,23 +236,24 @@ int main()
 							}							
 						}
 						else{
-							if(inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
+							if(inCheckKingPlayer1 && inCheckKingPlayer2){ //illegal
 								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
 								std::cout << "Both kings would be attacked!"<< std::endl;
 								break;
 							}
-							else if(!inCheckKingPlayer1 && inCheckKingPlayer2){//illegal
+							else if(!inCheckKingPlayer1 && inCheckKingPlayer2){ //illegal
 								std::cout << "You can not move " << figureSelected << " to " << targetPosition << std::endl;
 								std::cout << "Your own kings would be attacked!"<< std::endl;
 								break;
 							}
-							else{
+							else{ //move of figure is legal and sets the opponent king in check, so do the move on the play board
+
 								std::cout << "The King of Player " << 1 << " gets attacked!"<< std::endl;
 
 								//move on chessBoard
 								chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
 
-								//check if mate
+								//check if the move leads to checkmate
 								if(chessBoard.isCheckMate(1)){
 									std::cout<<"Player 1 is checkmate"<<std::endl;
 									endGame(chessBoard, play);
@@ -255,17 +263,20 @@ int main()
 							}
 						}
 					}
-					else{//move on chessBoard
-						chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
-					}		
+					else{ 
+					/*move is legal but does not lead to check, so execute the move and check if 
+					it leads to a draw through stalemate or insufficientMaterial (ref. https://www.chess.com/terms/draw-chess)*/
 
-					
-					if(chessBoard.isStalemate() || chessBoard.insufficientMaterial()){
+						chessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);
+
+						if(chessBoard.isStalemate() || chessBoard.insufficientMaterial()){
 						std::cout << std::endl << "Draw!" << std::endl;
 						endGame(chessBoard, play);
 						break;
-					}
+						}
+					}		
 
+					//change the player after the move is completed
 					if (currentPlayer == 1) { currentPlayer = 2; }
 					else { currentPlayer = 1; }
 				}
@@ -324,7 +335,7 @@ int main()
 				printer.print(chessBoard);
 				saveAndLoad.quicksave(chessBoard.getBoard());
 
-				
+				//check if the figure on the loaded board positions instantly lead to checkmate or draw
 
 				if(chessBoard.inCheck(1)){
 					if(chessBoard.isCheckMate(1)){
@@ -355,4 +366,3 @@ int main()
 	return 0;
 }
 
-//https://www.chess.com/terms/draw-chess
