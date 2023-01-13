@@ -312,7 +312,6 @@ bool insufficientMaterial(){
 	}
 	
 
-
 	std::cout << "Player 1" << std::endl;
 	for(std::pair p: player1){
 		std::cout << p.first << ": " << p.second << std::endl;
