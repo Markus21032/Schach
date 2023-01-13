@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <array>
+#include <map>
 
 
 #include "ChessFigures.hpp"
@@ -248,6 +249,84 @@ bool isStalemate(){
 	}
     return true;
 
+}
+
+/*
+Checks if a game is tied because there are not enough figures
+*/
+
+bool insufficientMaterial(){
+	std::map<char, int> player1;
+	std::map<char, int> player2;
+	//fill the 2 maps with the amout of figures on the board for each player
+	//format: <name of figure {B, K, L, Q, S, T}> : <amout of that bigure on board>
+	for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+			if(getFigure(i, j)->get_player() == 1){
+				if(player1.find(getFigure(i, j)->get_Name()) == player1.end()){
+					player1.insert({getFigure(i, j)->get_Name(), 1});
+				} else {
+					player1[getFigure(i, j)->get_Name()] = player1[getFigure(i, j)->get_Name()]+1;
+				}
+
+				}
+			else if(getFigure(i, j)->get_player() == 2){
+				if(player2.find(getFigure(i, j)->get_Name()) == player2.end()){
+					player2.insert({getFigure(i, j)->get_Name(), 1});
+				} else {
+					player2[getFigure(i, j)->get_Name()] = player2[getFigure(i, j)->get_Name()]+1;
+				}
+			}
+		}
+	}
+
+	//King vs. King
+	if( (player1.size() == 1 && player1.find('K') != player1.end()) && 	//player2 only has King
+		(player2.size() == 1 && player2.find('K') != player2.end()))	//player1 only has King
+	{	
+		return true;
+	}
+	//King & Bishop vs. King
+	else if ((player1.size() == 2 && player1.find('K') != player1.end() && player1.find('L') != player1.end()) && 	//player1 only has king & bishop
+			(player2.size() == 1 && player2.find('K') != player2.end()))											//player2 only has king
+	{
+		return true;
+	}
+	//King vs. Bishop & King
+	else if ((player2.size() == 2 && player2.find('K') != player2.end() && player2.find('L') != player2.end()) && 	//player2 only has king & bishop
+			(player1.size() == 1 && player1.find('K') != player1.end()))											//player1 only has king
+	{
+		return true;
+	}
+	//King & Knight vs. King
+	else if ((player1.size() == 2 && player1.find('K') != player1.end() && player1.find('B') != player1.end()) && 	//player2 only has king & bishop
+		(player2.size() == 1 && player2.find('K') != player2.end()))												//player1 only has king
+	{
+		return true;
+	}
+	//King vs. Knight & King
+	else if ((player2.size() == 2 && player2.find('K') != player2.end() && player2.find('B') != player2.end()) && 	//player2 only has king & bishop
+			(player1.size() == 1 && player1.find('K') != player1.end()))											//player1 only has king
+	{
+		return true;
+	}
+	
+
+
+	std::cout << "Player 1" << std::endl;
+	for(std::pair p: player1){
+		std::cout << p.first << ": " << p.second << std::endl;
+	}
+
+	std::cout << std::endl;
+	std::cout << "Player 2" << std::endl;
+	for(std::pair p: player2){
+		std::cout << p.first << ": " << p.second << std::endl;
+	}
+
+	//King and bishop vs. king and bishop of the same color as the opponent's bishop
+
+	return false;
 }
 
 

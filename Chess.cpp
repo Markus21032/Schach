@@ -15,8 +15,6 @@ int currentPlayer = 1;
 #include "SaveAndLoadChess.hpp"
 
 
-
- 
 void exit_handler(){
 	std::string quicksave = "StartedGames/Chess_Quick_Save";
 	std::ifstream infile(quicksave);
@@ -139,6 +137,7 @@ int main()
 	bool play = true;
 
 	while (play) {
+		chessBoard.insufficientMaterial();
 		std::string choice;
 		std::cout << "Player " << currentPlayer << " Type:"<< std::endl;
 		std::cout << "1 to move a figure"<< std::endl
@@ -199,8 +198,10 @@ int main()
 					tempChessBoard = chessBoard.copyBoard();
 					tempChessBoard.moveFigure(lineSelect,columnSelect,lineTarget,columnTarget);					
 
-					if(chessBoard.isStalemate()){
-						std::cout << std::endl << "Stalemate!" << std::endl;
+					if(chessBoard.isStalemate() || chessBoard.insufficientMaterial()){
+						std::cout << std::endl << "Draw!" << std::endl;
+						endGame(chessBoard, play);
+						break;
 					}
 
 					int inCheckKingPlayer1 = tempChessBoard.inCheck(1);
@@ -300,7 +301,6 @@ int main()
 				if (std::find(gamesToLoad.begin(), gamesToLoad.end(), selectedGame) != gamesToLoad.end()){
 
 						std::cout << "Game was found!" << std::endl;
-						printer.print(chessBoard);
 						gameIsSelected = true;
 						saveFileName = selectedGame;
 				}else {
