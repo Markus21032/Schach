@@ -199,7 +199,7 @@ int main()
 				}
 				else {
 					//move figure on copied temp board to use the inCheck() function to determine whether the move is legal without 
-					//chaning the play board
+					//changing the play board
 					ChessBoard tempChessBoard;
 					tempChessBoard = chessBoard.copyBoard();
 					tempChessBoard.moveFigure(lineSelect, columnSelect, lineTarget, columnTarget);					

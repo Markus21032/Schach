@@ -16,7 +16,6 @@ private:
 	//2d vector filled with Figure Objects representing the chess board
     std::vector<std::shared_ptr<std::vector<std::shared_ptr<Figure>>>> chessBoard;
 
-
     	/*initialisizes the chess board, is only called by the contructor*/
         void initBoard() {
 			chessBoard.clear();
@@ -303,38 +302,60 @@ bool insufficientMaterial(){
 	}
 
 	//King vs. King
-	if( (player1.size() == 1 && player1.find('K') != player1.end()) && 	//player2 only has King
-		(player2.size() == 1 && player2.find('K') != player2.end()))	//player1 only has King
+	if( (player1.size() == 1 && player1['K'] == 1) && 	//player2 only has King
+		(player2.size() == 1 && player2['K'] == 1))	//player1 only has King
 	{	
 		return true;
 	}
-	//King & Bishop vs. King
-	else if ((player1.size() == 2 && player1.find('K') != player1.end() && player1.find('L') != player1.end()) && 	//player1 only has king & bishop
-			(player2.size() == 1 && player2.find('K') != player2.end()))											//player2 only has king
+
+	//King & Bishop vs. King 
+	else if ((player1.size() == 2 && player1['K'] == 1 && player1['L'] == 1) && 	//player1 only has king & bishop
+			(player2.size() == 1 && player2['K'] == 1))								//player2 only has king
 	{
 		return true;
 	}
 	//King vs. Bishop & King
-	else if ((player2.size() == 2 && player2.find('K') != player2.end() && player2.find('L') != player2.end()) && 	//player2 only has king & bishop
-			(player1.size() == 1 && player1.find('K') != player1.end()))											//player1 only has king
+	else if ((player2.size() == 2 && player2['K'] == 1 && player2['L'] == 1) && 	//player2 only has king & bishop
+			(player1.size() == 1 && player1['K'] == 1))								//player1 only has king
 	{
 		return true;
 	}
 	//King & Knight vs. King
-	else if ((player1.size() == 2 && player1.find('K') != player1.end() && player1.find('B') != player1.end()) && 	//player2 only has king & bishop
-		(player2.size() == 1 && player2.find('K') != player2.end()))												//player1 only has king
+	else if ((player1.size() == 2 && player1['K'] == 1 && player1['S'] == 1) && 	//player1 only has king & knight
+			(player2.size() == 1 && player2['K'] == 1))								//player2 only has king
 	{
 		return true;
 	}
 	//King vs. Knight & King
-	else if ((player2.size() == 2 && player2.find('K') != player2.end() && player2.find('B') != player2.end()) && 	//player2 only has king & bishop
-			(player1.size() == 1 && player1.find('K') != player1.end()))											//player1 only has king
+	else if ((player2.size() == 2 && player2['K'] == 1 && player2['S'] == 1) && 	//player2 only has king & knight
+			(player1.size() == 1 && player1['K'] == 1))								//player1 only has king
 	{
 		return true;
 	}
+	//Bishop & King vs. Bishop & King (when both bishops are on the same field color)
+	else if ((player1.size() == 2 && player1['K'] == 1 && player1['L'] == 1) && 
+			(player2.size() == 2 && player2['K'] == 1 && player2['L'] == 1))
+	{
 
-	//King and bishop vs. king and bishop of the same color as the opponent's bishop
+		int digitSumP1 = -1;
+		int digitSumP2 = -1;
 
+		for (int i = 0; i < 8; i++) {
+        	for (int j = 0; j < 8; j++) {
+				if(getFigure(i, j)->get_player() == 1 && getFigure(i,j)->get_Name() == 'L'){
+					digitSumP1 = i + j;
+				}
+				else if (getFigure(i, j)->get_player() == 2 && getFigure(i,j)->get_Name() == 'L')
+				{
+					digitSumP2 = i + j;
+				}
+
+				if(digitSumP1 != -1 && digitSumP2 != -1){
+					return ((digitSumP1 % 2) == (digitSumP2 % 2));
+				}
+			}
+		}
+	}
 	return false;
 }
 
