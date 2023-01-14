@@ -279,6 +279,7 @@ Checks if a game is tied because there are not enough figures
 bool insufficientMaterial(){
 	std::map<char, int> player1;
 	std::map<char, int> player2;
+
 	//fill the 2 maps with the amout of figures on the board for each player
 	//format: <name of figure {B, K, L, Q, S, T}> : <amout of that bigure on board>
 	for (int i = 0; i < 8; i++) {
@@ -300,42 +301,43 @@ bool insufficientMaterial(){
 			}
 		}
 	}
+	std::cout << "Player1:" << player1.size() << std::endl;
+	for(auto x: player1){
+		std::cout << x.first << ": " << x.second << std::endl;
+	}
+	std::cout << "Player2:" << player2.size() << std::endl;
+	for(auto x: player2){
+		std::cout << x.first << ": " << x.second << std::endl;
+	}
 
 	//King vs. King
 	if( (player1.size() == 1 && player1['K'] == 1) && 	//player2 only has King
-		(player2.size() == 1 && player2['K'] == 1))	//player1 only has King
-	{	
+		(player2.size() == 1 && player2['K'] == 1)){	//player1 only has King
 		return true;
 	}
-
 	//King & Bishop vs. King 
 	else if ((player1.size() == 2 && player1['K'] == 1 && player1['L'] == 1) && 	//player1 only has king & bishop
-			(player2.size() == 1 && player2['K'] == 1))								//player2 only has king
-	{
+			(player2.size() == 1 && player2['K'] == 1)){								//player2 only has king
 		return true;
 	}
 	//King vs. Bishop & King
 	else if ((player2.size() == 2 && player2['K'] == 1 && player2['L'] == 1) && 	//player2 only has king & bishop
-			(player1.size() == 1 && player1['K'] == 1))								//player1 only has king
-	{
+			(player1.size() == 1 && player1['K'] == 1)){							//player1 only has king
 		return true;
 	}
 	//King & Knight vs. King
 	else if ((player1.size() == 2 && player1['K'] == 1 && player1['S'] == 1) && 	//player1 only has king & knight
-			(player2.size() == 1 && player2['K'] == 1))								//player2 only has king
-	{
+			(player2.size() == 1 && player2['K'] == 1)){								//player2 only has king
 		return true;
 	}
 	//King vs. Knight & King
 	else if ((player2.size() == 2 && player2['K'] == 1 && player2['S'] == 1) && 	//player2 only has king & knight
-			(player1.size() == 1 && player1['K'] == 1))								//player1 only has king
-	{
+			(player1.size() == 1 && player1['K'] == 1)){								//player1 only has king
 		return true;
 	}
 	//Bishop & King vs. Bishop & King (when both bishops are on the same field color)
 	else if ((player1.size() == 2 && player1['K'] == 1 && player1['L'] == 1) && 
-			(player2.size() == 2 && player2['K'] == 1 && player2['L'] == 1))
-	{
+			(player2.size() == 2 && player2['K'] == 1 && player2['L'] == 1)){
 
 		int digitSumP1 = -1;
 		int digitSumP2 = -1;
